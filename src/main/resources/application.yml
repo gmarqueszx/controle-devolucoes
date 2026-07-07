@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: conectsol-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/conectsol
+    username: postgres
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+
+jwt:
+  secret: ${JWT_SECRET:dev_secret_nao_usar_em_producao_0123456789abcdef}
+  expiration: 86400000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
