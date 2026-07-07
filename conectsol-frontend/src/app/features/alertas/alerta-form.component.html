@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Novo alerta</h2>
+
+<form [formGroup]="form" (ngSubmit)="salvar()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Equipe</mat-label>
+      <mat-select formControlName="equipeId">
+        <mat-option *ngFor="let equipe of data.equipes" [value]="equipe.id">{{ equipe.montador }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls.equipeId.hasError('required')">Equipe é obrigatória</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Data do alerta</mat-label>
+      <input matInput [matDatepicker]="dp" formControlName="dataAlerta" />
+      <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="descricao" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Status original (planilha)</mat-label>
+      <input matInput formControlName="statusOriginal" placeholder="Ex.: Alto, Médio, Aguardando..." />
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit">Salvar</button>
+  </div>
+</form>

@@ -1,0 +1,88 @@
+<div class="alertas">
+  <div class="cabecalho">
+    <h2>Alertas</h2>
+    <button mat-flat-button color="primary" (click)="novoAlerta()">
+      <mat-icon>add</mat-icon>
+      Novo alerta
+    </button>
+  </div>
+
+  <mat-card class="filtros">
+    <form [formGroup]="filtroForm" class="filtros-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Período</mat-label>
+        <mat-date-range-input [rangePicker]="picker" [formGroup]="filtroForm">
+          <input matStartDate formControlName="start" placeholder="Início" (dateChange)="aoMudarFiltro()" />
+          <input matEndDate formControlName="end" placeholder="Fim" (dateChange)="aoMudarFiltro()" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nível</mat-label>
+        <mat-select formControlName="nivel" (selectionChange)="aoMudarFiltro()">
+          <mat-option [value]="null">Todos</mat-option>
+          <mat-option value="ALTO">Alto</mat-option>
+          <mat-option value="MEDIO">Médio</mat-option>
+          <mat-option value="LEVE">Leve</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Equipe</mat-label>
+        <mat-select formControlName="equipeId" (selectionChange)="aoMudarFiltro()">
+          <mat-option [value]="null">Todas</mat-option>
+          <mat-option *ngFor="let equipe of equipes" [value]="equipe.id">{{ equipe.montador }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-card>
+
+  <mat-card class="tabela-container">
+    <table mat-table [dataSource]="dataSource" class="tabela">
+      <ng-container matColumnDef="dataAlerta">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let item">{{ item.dataAlerta | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="montador">
+        <th mat-header-cell *matHeaderCellDef>Montador</th>
+        <td mat-cell *matCellDef="let item">{{ item.montador }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="eletricista">
+        <th mat-header-cell *matHeaderCellDef>Eletricista</th>
+        <td mat-cell *matCellDef="let item">{{ item.eletricista }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef>Descrição</th>
+        <td mat-cell *matCellDef="let item">{{ item.descricao }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nivel">
+        <th mat-header-cell *matHeaderCellDef>Nível</th>
+        <td mat-cell *matCellDef="let item"><app-nivel-badge [nivel]="item.nivel"></app-nivel-badge></td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let item">
+          <mat-form-field appearance="outline" class="status-select">
+            <mat-select [value]="item.status" (selectionChange)="atualizarStatus(item, $event.value)">
+              <mat-option value="ABERTO">Aberto</mat-option>
+              <mat-option value="RESOLVIDO">Resolvido</mat-option>
+              <mat-option value="JUSTIFICADO">Justificado</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+  </mat-card>
+</div>

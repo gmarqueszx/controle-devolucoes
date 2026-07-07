@@ -21,8 +21,8 @@ export class AlertaService {
     return this.http.get<Alerta[]>(this.apiUrl, { params });
   }
 
-  criar(request: AlertaRequest): Observable<Alerta> {
-    return this.http.post<Alerta>(this.apiUrl, request);
+  criar(request: AlertaRequest): Observable<Alerta | null> {
+    return this.http.post<Alerta | null>(this.apiUrl, request);
   }
 
   atualizarStatus(id: number, status: Alerta['status']): Observable<Alerta> {

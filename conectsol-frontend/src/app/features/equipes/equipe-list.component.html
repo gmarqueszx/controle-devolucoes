@@ -1,0 +1,43 @@
+<div class="equipes">
+  <div class="cabecalho">
+    <h2>Equipes</h2>
+    <button mat-flat-button color="primary" (click)="novaEquipe()">
+      <mat-icon>add</mat-icon>
+      Nova equipe
+    </button>
+  </div>
+
+  <mat-card class="tabela-container">
+    <table mat-table [dataSource]="equipes" class="tabela">
+      <ng-container matColumnDef="montador">
+        <th mat-header-cell *matHeaderCellDef>Montador</th>
+        <td mat-cell *matCellDef="let equipe">{{ equipe.montador }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="eletricista">
+        <th mat-header-cell *matHeaderCellDef>Eletricista</th>
+        <td mat-cell *matCellDef="let equipe">{{ equipe.eletricista }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ativa">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let equipe">{{ equipe.ativa ? 'Ativa' : 'Inativa' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let equipe">
+          <button mat-icon-button (click)="editarEquipe(equipe)" title="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="excluirEquipe(equipe)" title="Desativar" [disabled]="!equipe.ativa">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card>
+</div>

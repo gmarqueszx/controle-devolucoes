@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ data ? 'Editar equipe' : 'Nova equipe' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="salvar()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Montador</mat-label>
+      <input matInput formControlName="montador" />
+      <mat-error *ngIf="form.controls.montador.hasError('required')">Montador é obrigatório</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Eletricista</mat-label>
+      <input matInput formControlName="eletricista" />
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit">Salvar</button>
+  </div>
+</form>

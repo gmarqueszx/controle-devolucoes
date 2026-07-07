@@ -1,0 +1,30 @@
+.lancamentos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filtros {
+  padding: 12px 16px;
+}
+
+.filtros-form {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tabela-container {
+  overflow-x: auto;
+  padding: 0;
+}
+
+.tabela {
+  width: 100%;
+}

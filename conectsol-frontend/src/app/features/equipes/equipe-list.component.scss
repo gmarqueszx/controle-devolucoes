@@ -1,0 +1,20 @@
+.equipes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabela-container {
+  overflow-x: auto;
+  padding: 0;
+}
+
+.tabela {
+  width: 100%;
+}
