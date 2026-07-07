@@ -15,7 +15,7 @@ Stack: Java 21, Spring Boot 3.3, Maven, Spring Data JPA, PostgreSQL, Spring Secu
 
 ### Pré-requisitos
 - Java 21
-- PostgreSQL 16 rodando localmente
+- PostgreSQL 16 rodando localmente (usuário `postgres`, senha `postgres` por padrão — ajustável via `DB_PASSWORD`)
 - Maven (ou use o Maven embutido no IntelliJ)
 
 ### Rodando localmente
