@@ -7,15 +7,23 @@ import { LancamentoListComponent } from './features/lancamentos/lancamento-list.
 import { LancamentoFormComponent } from './features/lancamentos/lancamento-form.component';
 import { AlertaListComponent } from './features/alertas/alerta-list.component';
 import { EquipeListComponent } from './features/equipes/equipe-list.component';
+import { LayoutComponent } from './shared/components/layout.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'relatorio', component: RelatorioEquipesComponent, canActivate: [authGuard] },
-  { path: 'lancamentos', component: LancamentoListComponent, canActivate: [authGuard] },
-  { path: 'lancamentos/novo', component: LancamentoFormComponent, canActivate: [authGuard, adminGuard] },
-  { path: 'alertas', component: AlertaListComponent, canActivate: [authGuard] },
-  { path: 'equipes', component: EquipeListComponent, canActivate: [authGuard] },
+  {
+    path: '',
+    component: LayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'relatorio', component: RelatorioEquipesComponent },
+      { path: 'lancamentos', component: LancamentoListComponent },
+      { path: 'lancamentos/novo', component: LancamentoFormComponent, canActivate: [adminGuard] },
+      { path: 'alertas', component: AlertaListComponent },
+      { path: 'equipes', component: EquipeListComponent }
+    ]
+  },
   { path: '**', redirectTo: 'dashboard' }
 ];
