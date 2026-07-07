@@ -1,5 +1,6 @@
 package br.com.conectsol.backend.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,9 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +49,68 @@ public class Lancamento {
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
+
+    private Boolean retornou;
+
+    @Column(name = "tipo_sistema", length = 50)
+    private String tipoSistema;
+
+    @Column(length = 50)
+    private String telhado;
+
+    private Integer placas;
+
+    /** Calculado automaticamente pelo StringCalculator a partir de placas e inversores. */
+    private Integer strings;
+
+    @OneToMany(mappedBy = "lancamento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderColumn(name = "id")
+    @Builder.Default
+    private List<LancamentoInversor> inversores = new ArrayList<>();
+
+    /** Calculados automaticamente pelo CaboCalculator a partir de telhado, strings e qtd. de inversores. */
+    @Column(name = "cabo_solar_verm_enviado")
+    private Double caboSolarVermEnviado;
+
+    @Column(name = "cabo_solar_preto_enviado")
+    private Double caboSolarPretoEnviado;
+
+    @Column(name = "cabo_hepr_enviado")
+    private Double caboHeprEnviado;
+
+    @Column(name = "cabo_solar_verm_devolvido")
+    private Double caboSolarVermDevolvido;
+
+    @Column(name = "cabo_solar_preto_devolvido")
+    private Double caboSolarPretoDevolvido;
+
+    @Column(name = "cabo_hepr_devolvido")
+    private Double caboHeprDevolvido;
+
+    /** Derivados: enviado + ajusteFino - devolvido. */
+    @Column(name = "cabo_solar_verm_usado")
+    private Double caboSolarVermUsado;
+
+    @Column(name = "cabo_solar_preto_usado")
+    private Double caboSolarPretoUsado;
+
+    @Column(name = "cabo_hepr_usado")
+    private Double caboHeprUsado;
+
+    @Column(name = "qtd_materiais_enviados")
+    private Integer qtdMateriaisEnviados;
+
+    @Column(name = "qtd_materiais_divergentes")
+    private Integer qtdMateriaisDivergentes;
+
+    private Double aproveitamento;
+
+    @Column(name = "foto_sobras_grupo")
+    private Boolean fotoSobrasGrupo;
+
+    /** Ajuste manual opcional (em metros), somado ao cabo enviado calculado. */
+    @Column(name = "ajuste_fino")
+    private Double ajusteFino;
 
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)
