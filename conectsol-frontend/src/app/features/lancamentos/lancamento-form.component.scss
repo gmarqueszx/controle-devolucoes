@@ -1,7 +1,31 @@
 .form-card {
-  max-width: 480px;
+  max-width: 760px;
+}
+
+h3 {
+  margin-top: 16px;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.linha {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .campo {
-  width: 100%;
+  flex: 1 1 240px;
+}
+
+.campo-pequeno {
+  width: 160px;
+}
+
+.dica {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: -8px;
 }

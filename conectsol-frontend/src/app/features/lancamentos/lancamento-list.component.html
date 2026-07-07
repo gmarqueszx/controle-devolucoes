@@ -56,9 +56,29 @@
         <td mat-cell *matCellDef="let item">{{ item.sistemas }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="telhado">
+        <th mat-header-cell *matHeaderCellDef>Telhado</th>
+        <td mat-cell *matCellDef="let item">{{ item.telhado }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="strings">
+        <th mat-header-cell *matHeaderCellDef>Strings</th>
+        <td mat-cell *matCellDef="let item">{{ item.strings }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="aproveitamento">
+        <th mat-header-cell *matHeaderCellDef>Aproveitamento</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.aproveitamento != null ? (item.aproveitamento | percent: '1.0-1') : '-' }}
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="acoes">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td mat-cell *matCellDef="let item">
+          <button mat-icon-button (click)="verDetalhes(item)" title="Ver detalhes">
+            <mat-icon>visibility</mat-icon>
+          </button>
           <button mat-icon-button (click)="excluir(item)" title="Excluir" *ngIf="isAdmin">
             <mat-icon>delete</mat-icon>
           </button>

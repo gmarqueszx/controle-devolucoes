@@ -1,0 +1,32 @@
+.detalhe {
+  min-width: 420px;
+}
+
+h4 {
+  margin-bottom: 4px;
+  margin-top: 16px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+
+.tabela-cabos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-cabos th,
+.tabela-cabos td {
+  padding: 4px 8px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dica {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.5);
+}

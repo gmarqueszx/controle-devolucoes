@@ -5,36 +5,121 @@
 
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="salvar()">
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Equipe</mat-label>
-        <input matInput formControlName="equipe" [matAutocomplete]="auto" />
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="exibirEquipe">
-          <mat-option *ngFor="let equipe of equipesFiltradas$ | async" [value]="equipe">
-            {{ equipe.montador }}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="form.controls.equipe.hasError('required')">Equipe é obrigatória</mat-error>
-        <mat-error *ngIf="form.controls.equipe.hasError('equipeInvalida')">Selecione uma equipe válida</mat-error>
-      </mat-form-field>
+      <h3>Instalação</h3>
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Equipe</mat-label>
+          <input matInput formControlName="equipe" [matAutocomplete]="auto" />
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="exibirEquipe">
+            <mat-option *ngFor="let equipe of equipesFiltradas$ | async" [value]="equipe">
+              {{ equipe.montador }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.equipe.hasError('required')">Equipe é obrigatória</mat-error>
+          <mat-error *ngIf="form.controls.equipe.hasError('equipeInvalida')">Selecione uma equipe válida</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Data do lançamento</mat-label>
-        <input matInput [matDatepicker]="dp" formControlName="dataLancamento" />
-        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
-        <mat-datepicker #dp></mat-datepicker>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Data do lançamento</mat-label>
+          <input matInput [matDatepicker]="dp" formControlName="dataLancamento" />
+          <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp></mat-datepicker>
+        </mat-form-field>
+      </div>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Cliente</mat-label>
-        <input matInput formControlName="cliente" />
-      </mat-form-field>
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Cliente</mat-label>
+          <input matInput formControlName="cliente" />
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Sistemas</mat-label>
-        <input matInput type="number" formControlName="sistemas" />
-        <mat-error *ngIf="form.controls.sistemas.hasError('min')">Deve ser maior que zero</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Sistemas</mat-label>
+          <input matInput type="number" formControlName="sistemas" />
+        </mat-form-field>
+      </div>
 
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Tipo de sistema</mat-label>
+          <mat-select formControlName="tipoSistema">
+            <mat-option value="PROJETO">Projeto</mat-option>
+            <mat-option value="AMPLIAÇÃO">Ampliação</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Telhado</mat-label>
+          <mat-select formControlName="telhado">
+            <mat-option *ngFor="let telhado of telhados" [value]="telhado">{{ telhado }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.controls.telhado.hasError('required')">Telhado é obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Placas</mat-label>
+          <input matInput type="number" formControlName="placas" />
+        </mat-form-field>
+
+        <mat-checkbox formControlName="retornou">Retornou material</mat-checkbox>
+      </div>
+
+      <h3>Inversores</h3>
+      <div formArrayName="inversores">
+        <div class="linha" *ngFor="let grupo of inversoresArray.controls; let i = index" [formGroupName]="i">
+          <mat-form-field appearance="outline" class="campo-pequeno">
+            <mat-label>Potência (kW)</mat-label>
+            <input matInput type="number" formControlName="kw" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="campo-pequeno">
+            <mat-label>Quantidade</mat-label>
+            <input matInput type="number" formControlName="quantidade" />
+          </mat-form-field>
+          <button mat-icon-button type="button" (click)="removerInversor(i)" title="Remover inversor">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button mat-stroked-button type="button" (click)="adicionarInversor()">
+        <mat-icon>add</mat-icon>
+        Adicionar inversor
+      </button>
+
+      <h3>Cabos devolvidos (m)</h3>
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Solar vermelho</mat-label>
+          <input matInput type="number" formControlName="caboSolarVermDevolvido" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Solar preto</mat-label>
+          <input matInput type="number" formControlName="caboSolarPretoDevolvido" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>HEPR</mat-label>
+          <input matInput type="number" formControlName="caboHeprDevolvido" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Ajuste fino (m)</mat-label>
+          <input matInput type="number" formControlName="ajusteFino" />
+        </mat-form-field>
+      </div>
+      <p class="dica">Strings e cabo enviado são calculados automaticamente ao salvar.</p>
+
+      <h3>Materiais</h3>
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Qtd. materiais enviados</mat-label>
+          <input matInput type="number" formControlName="qtdMateriaisEnviados" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Qtd. materiais divergentes</mat-label>
+          <input matInput type="number" formControlName="qtdMateriaisDivergentes" />
+        </mat-form-field>
+        <mat-checkbox formControlName="fotoSobrasGrupo">Foto das sobras no grupo</mat-checkbox>
+      </div>
+
+      <h3>Observações</h3>
       <mat-form-field appearance="outline" class="campo">
         <mat-label>Observações</mat-label>
         <textarea matInput formControlName="observacoes" rows="3"></textarea>

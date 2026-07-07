@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +18,7 @@ import { Lancamento } from '../../core/models/lancamento.model';
 import { AuthService } from '../../core/services/auth.service';
 import { EquipeService } from '../../core/services/equipe.service';
 import { LancamentoService } from '../../core/services/lancamento.service';
+import { LancamentoDetalheComponent } from './lancamento-detalhe.component';
 
 @Component({
   selector: 'app-lancamento-list',
@@ -33,13 +35,24 @@ import { LancamentoService } from '../../core/services/lancamento.service';
     MatNativeDateModule,
     MatTableModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   templateUrl: './lancamento-list.component.html',
   styleUrl: './lancamento-list.component.scss'
 })
 export class LancamentoListComponent implements OnInit {
-  displayedColumns = ['dataLancamento', 'montador', 'eletricista', 'cliente', 'sistemas', 'acoes'];
+  displayedColumns = [
+    'dataLancamento',
+    'montador',
+    'eletricista',
+    'cliente',
+    'sistemas',
+    'telhado',
+    'strings',
+    'aproveitamento',
+    'acoes'
+  ];
   lancamentos: Lancamento[] = [];
   equipes: Equipe[] = [];
 
@@ -54,7 +67,8 @@ export class LancamentoListComponent implements OnInit {
     private readonly lancamentoService: LancamentoService,
     private readonly equipeService: EquipeService,
     private readonly authService: AuthService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +82,10 @@ export class LancamentoListComponent implements OnInit {
 
   aoMudarFiltro(): void {
     this.carregar();
+  }
+
+  verDetalhes(lancamento: Lancamento): void {
+    this.dialog.open(LancamentoDetalheComponent, { data: lancamento, width: '520px' });
   }
 
   excluir(lancamento: Lancamento): void {

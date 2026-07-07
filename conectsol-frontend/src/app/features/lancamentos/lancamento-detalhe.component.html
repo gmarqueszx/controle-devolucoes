@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>Detalhes do lançamento — {{ lancamento.cliente }}</h2>
+
+<div mat-dialog-content class="detalhe">
+  <h4>Instalação</h4>
+  <div class="grade">
+    <span><strong>Tipo de sistema:</strong> {{ lancamento.tipoSistema || '-' }}</span>
+    <span><strong>Telhado:</strong> {{ lancamento.telhado || '-' }}</span>
+    <span><strong>Placas:</strong> {{ lancamento.placas ?? '-' }}</span>
+    <span><strong>Strings (calculado):</strong> {{ lancamento.strings ?? '-' }}</span>
+    <span><strong>Retornou material:</strong> {{ lancamento.retornou ? 'Sim' : 'Não' }}</span>
+  </div>
+
+  <h4>Inversores</h4>
+  <ul>
+    <li *ngFor="let inversor of lancamento.inversores">{{ inversor.kw }}kW x{{ inversor.quantidade }}</li>
+  </ul>
+
+  <h4>Cabos (m)</h4>
+  <table class="tabela-cabos">
+    <tr>
+      <th></th>
+      <th>Enviado</th>
+      <th>Devolvido</th>
+      <th>Usado</th>
+    </tr>
+    <tr>
+      <td>Solar vermelho</td>
+      <td>{{ lancamento.caboSolarVermEnviado ?? '-' }}</td>
+      <td>{{ lancamento.caboSolarVermDevolvido ?? '-' }}</td>
+      <td>{{ lancamento.caboSolarVermUsado ?? '-' }}</td>
+    </tr>
+    <tr>
+      <td>Solar preto</td>
+      <td>{{ lancamento.caboSolarPretoEnviado ?? '-' }}</td>
+      <td>{{ lancamento.caboSolarPretoDevolvido ?? '-' }}</td>
+      <td>{{ lancamento.caboSolarPretoUsado ?? '-' }}</td>
+    </tr>
+    <tr>
+      <td>HEPR</td>
+      <td>{{ lancamento.caboHeprEnviado ?? '-' }}</td>
+      <td>{{ lancamento.caboHeprDevolvido ?? '-' }}</td>
+      <td>{{ lancamento.caboHeprUsado ?? '-' }}</td>
+    </tr>
+  </table>
+  <p class="dica" *ngIf="lancamento.ajusteFino">Ajuste fino aplicado: {{ lancamento.ajusteFino }}m</p>
+
+  <h4>Materiais</h4>
+  <div class="grade">
+    <span><strong>Qtd. enviados:</strong> {{ lancamento.qtdMateriaisEnviados ?? '-' }}</span>
+    <span><strong>Qtd. divergentes:</strong> {{ lancamento.qtdMateriaisDivergentes ?? '-' }}</span>
+    <span>
+      <strong>Aproveitamento:</strong>
+      {{ lancamento.aproveitamento != null ? (lancamento.aproveitamento * 100 | number: '1.0-1') + '%' : '-' }}
+    </span>
+    <span><strong>Foto das sobras no grupo:</strong> {{ lancamento.fotoSobrasGrupo ? 'Sim' : 'Não' }}</span>
+  </div>
+
+  <h4>Observações</h4>
+  <p>{{ lancamento.observacoes || '-' }}</p>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Fechar</button>
+</div>
