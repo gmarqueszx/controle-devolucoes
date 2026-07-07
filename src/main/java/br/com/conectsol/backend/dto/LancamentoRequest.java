@@ -3,6 +3,7 @@ package br.com.conectsol.backend.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,4 +30,23 @@ public class LancamentoRequest {
     private String observacoes;
 
     private String criadoPor;
+
+    private Boolean retornou;
+    private String tipoSistema;
+    private String telhado;
+    private Integer placas;
+
+    @Builder.Default
+    private List<InversorDTO> inversores = List.of();
+
+    private Double caboSolarVermDevolvido;
+    private Double caboSolarPretoDevolvido;
+    private Double caboHeprDevolvido;
+
+    private Integer qtdMateriaisEnviados;
+    private Integer qtdMateriaisDivergentes;
+    private Boolean fotoSobrasGrupo;
+
+    /** Ajuste manual opcional (em metros), somado ao cabo enviado calculado. */
+    private Double ajusteFino;
 }
