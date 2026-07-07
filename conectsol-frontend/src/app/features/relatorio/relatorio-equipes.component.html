@@ -1,0 +1,60 @@
+<div class="relatorio">
+  <mat-card class="filtro">
+    <mat-form-field appearance="outline">
+      <mat-label>Período</mat-label>
+      <mat-date-range-input [rangePicker]="picker" [formGroup]="periodoForm">
+        <input matStartDate formControlName="start" placeholder="Início" (dateChange)="aoMudarPeriodo()" />
+        <input matEndDate formControlName="end" placeholder="Fim" (dateChange)="aoMudarPeriodo()" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </mat-card>
+
+  <mat-card class="tabela-container">
+    <table mat-table [dataSource]="dataSource" matSort class="tabela">
+      <ng-container matColumnDef="montador">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Montador</th>
+        <td mat-cell *matCellDef="let item">{{ item.montador }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="eletricista">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Eletricista</th>
+        <td mat-cell *matCellDef="let item">{{ item.eletricista }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="alto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>🔴 Alto</th>
+        <td mat-cell *matCellDef="let item" class="valor-alto">{{ item.alto }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="medio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>🟠 Médio</th>
+        <td mat-cell *matCellDef="let item" class="valor-medio">{{ item.medio }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="leve">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>🟡 Leve</th>
+        <td mat-cell *matCellDef="let item" class="valor-leve">{{ item.leve }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="totalAlertas">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+        <td mat-cell *matCellDef="let item">{{ item.totalAlertas }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sistemas">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sistemas</th>
+        <td mat-cell *matCellDef="let item">{{ item.sistemas }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="indice">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Índice</th>
+        <td mat-cell *matCellDef="let item">{{ item.indiceAlertasPorSistema | number: '1.2-2' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let item; columns: displayedColumns" [ngClass]="classeLinha(item)"></tr>
+    </table>
+  </mat-card>
+</div>
