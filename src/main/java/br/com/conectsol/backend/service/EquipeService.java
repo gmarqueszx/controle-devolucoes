@@ -146,7 +146,7 @@ public class EquipeService {
                 .eletricista(equipe.getEletricista())
                 .ajudante(equipe.getAjudante())
                 .membros(membros)
-                .ativa(equipe.getAtiva())vv
+                .ativa(equipe.getAtiva())
                 .build();
     }
 }
