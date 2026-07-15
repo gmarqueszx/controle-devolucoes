@@ -1,0 +1,8 @@
+{
+  "name": "controle-devolucoes-frontend",
+  "compatibility_date": "2026-07-15",
+  "assets": {
+    "directory": "./dist/conectsol-frontend/browser",
+    "not_found_handling": "single-page-application"
+  }
+}
