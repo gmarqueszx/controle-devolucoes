@@ -1,0 +1,8 @@
+.git
+.gitignore
+.idea
+target
+conectsol-frontend
+*.diff
+README.md
+docker-compose.yml

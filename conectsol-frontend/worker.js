@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://SEU-BACKEND.a.run.app";
+const BACKEND_URL = "https://conectsol-backend-qhbv3d7eya-uc.a.run.app";
 
 export default {
   async fetch(request, env) {
