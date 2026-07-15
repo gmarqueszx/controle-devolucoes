@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 
 import br.com.conectsol.backend.model.Alerta;
 import br.com.conectsol.backend.model.Equipe;
+import br.com.conectsol.backend.model.EquipeMembro;
+import br.com.conectsol.backend.model.FuncaoEquipe;
 import br.com.conectsol.backend.model.Lancamento;
 import br.com.conectsol.backend.model.NivelAlerta;
 import br.com.conectsol.backend.repository.AlertaRepository;
@@ -37,7 +39,7 @@ class RelatorioServiceTest {
 
     @Test
     void deveCalcularResumoPorEquipeComAlertasELancamentosMockados() {
-        Equipe jose = Equipe.builder().id(1L).montador("JOSE").eletricista("CARLOS").build();
+        Equipe jose = equipeComMembros(1L, "JOSE", "CARLOS");
 
         List<Alerta> alertas = List.of(
                 Alerta.builder().equipe(jose).nivel(NivelAlerta.ALTO).dataAlerta(LocalDate.now()).build(),
@@ -61,13 +63,14 @@ class RelatorioServiceTest {
         assertThat(relatorio.getMedio()).isEqualTo(1);
         assertThat(relatorio.getLeve()).isEqualTo(1);
         assertThat(relatorio.getTotalAlertas()).isEqualTo(4);
+        assertThat(relatorio.getPontos()).isEqualTo(2 * 5 + 1 * 3 + 1 * 1);
         assertThat(relatorio.getSistemas()).isEqualTo(12);
         assertThat(relatorio.getIndiceAlertasPorSistema()).isEqualTo(4.0 / 12.0);
     }
 
     @Test
     void deveRetornarIndiceZeroQuandoNaoHouverSistemasLancados() {
-        Equipe maria = Equipe.builder().id(2L).montador("MARIA").eletricista("PEDRO").build();
+        Equipe maria = equipeComMembros(2L, "MARIA", "PEDRO");
         List<Alerta> alertas = List.of(
                 Alerta.builder().equipe(maria).nivel(NivelAlerta.ALTO).dataAlerta(LocalDate.now()).build());
 
@@ -85,7 +88,7 @@ class RelatorioServiceTest {
         YearMonth atual = YearMonth.of(2026, 7);
         YearMonth inicio = atual.minusMonths(2);
 
-        Equipe equipe = Equipe.builder().id(1L).montador("JOSE").build();
+        Equipe equipe = equipeComMembros(1L, "JOSE", null);
         List<Alerta> alertas = List.of(
                 Alerta.builder().equipe(equipe).nivel(NivelAlerta.ALTO).dataAlerta(LocalDate.of(2026, 7, 5)).build(),
                 Alerta.builder().equipe(equipe).nivel(NivelAlerta.LEVE).dataAlerta(LocalDate.of(2026, 5, 10)).build());
@@ -99,5 +102,20 @@ class RelatorioServiceTest {
         assertThat(tendencia.get(1).getTotal()).isZero();
         assertThat(tendencia.get(2).getMes()).isEqualTo("Jul/26");
         assertThat(tendencia.get(2).getAlto()).isEqualTo(1);
+    }
+
+    private Equipe equipeComMembros(Long id, String montador, String eletricista) {
+        Equipe equipe = Equipe.builder().id(id).build();
+        equipe.getMembros()
+                .add(EquipeMembro.builder().equipe(equipe).nome(montador).funcao(FuncaoEquipe.MONTADOR).build());
+        if (eletricista != null) {
+            equipe.getMembros()
+                    .add(EquipeMembro.builder()
+                            .equipe(equipe)
+                            .nome(eletricista)
+                            .funcao(FuncaoEquipe.ELETRICISTA)
+                            .build());
+        }
+        return equipe;
     }
 }

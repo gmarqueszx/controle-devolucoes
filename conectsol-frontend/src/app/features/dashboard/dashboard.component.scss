@@ -6,29 +6,65 @@
 
 .kpis {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
 }
 
 .kpi {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 16px;
+  gap: 16px;
+  padding: 20px 24px;
+  border-left: 4px solid transparent;
+}
+
+.kpi-icone {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 2.5rem;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.kpi-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .kpi-valor {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
+  line-height: 1.15;
 }
 
 .kpi-label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: rgba(0, 0, 0, 0.6);
-  text-align: center;
+  line-height: 1.25;
 }
 
+.kpi-sucesso {
+  border-left-color: #2e7d32;
+}
+.kpi-sucesso .kpi-icone,
+.kpi-sucesso .kpi-valor {
+  color: #2e7d32;
+}
+
+.kpi-alerta {
+  border-left-color: #ed6c02;
+}
+.kpi-alerta .kpi-icone,
+.kpi-alerta .kpi-valor {
+  color: #ed6c02;
+}
+
+.kpi-alto {
+  border-left-color: #d32f2f;
+}
+.kpi-alto .kpi-icone,
 .kpi-alto .kpi-valor {
   color: #d32f2f;
 }

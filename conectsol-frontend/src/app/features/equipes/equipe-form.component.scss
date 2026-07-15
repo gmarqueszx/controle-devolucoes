@@ -1,4 +1,15 @@
 .campo {
   width: 100%;
-  min-width: 320px;
+  min-width: 220px;
+}
+
+.linha-membro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.erro-montador {
+  color: #b3261e;
+  font-size: 0.85rem;
 }

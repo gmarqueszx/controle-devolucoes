@@ -18,4 +18,6 @@ public interface AlertaRepository extends JpaRepository<Alerta, Long> {
             LocalDate de, LocalDate ate, NivelAlerta nivel, Long equipeId);
 
     long countByDataAlerta(LocalDate dataAlerta);
+
+    List<Alerta> findByLancamentoIdAndOrigem(Long lancamentoId, String origem);
 }

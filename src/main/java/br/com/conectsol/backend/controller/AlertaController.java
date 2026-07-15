@@ -3,6 +3,7 @@ package br.com.conectsol.backend.controller;
 import br.com.conectsol.backend.dto.AlertaDTO;
 import br.com.conectsol.backend.dto.AlertaRequest;
 import br.com.conectsol.backend.dto.AlertaStatusRequest;
+import br.com.conectsol.backend.dto.ConfirmarDesvioRequest;
 import br.com.conectsol.backend.model.NivelAlerta;
 import br.com.conectsol.backend.service.AlertaService;
 import jakarta.validation.Valid;
@@ -47,5 +48,10 @@ public class AlertaController {
     @PutMapping("/{id}/status")
     public AlertaDTO atualizarStatus(@PathVariable Long id, @Valid @RequestBody AlertaStatusRequest request) {
         return alertaService.atualizarStatus(id, request);
+    }
+
+    @PutMapping("/{id}/confirmar-desvio")
+    public AlertaDTO confirmarDesvio(@PathVariable Long id, @Valid @RequestBody ConfirmarDesvioRequest request) {
+        return alertaService.confirmarDesvio(id, request);
     }
 }

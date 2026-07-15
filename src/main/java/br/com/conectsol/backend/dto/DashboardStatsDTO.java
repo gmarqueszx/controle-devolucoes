@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DashboardStatsDTO {
 
-    private long alertasHoje;
-    private long alertasSemana;
-    private long alertasMes;
-    private long equipesAtivas;
-    private long sistemasMes;
+    private long sistemasPeriodo;
+    private Double percentualAproveitamento100;
+    private long sobrasPendentes;
+    private long alertasAltoPeriodo;
 }

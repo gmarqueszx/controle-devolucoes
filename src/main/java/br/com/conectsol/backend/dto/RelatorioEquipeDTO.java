@@ -13,10 +13,12 @@ public class RelatorioEquipeDTO {
 
     private String montador;
     private String eletricista;
+    private String ajudante;
     private long alto;
     private long medio;
     private long leve;
     private long totalAlertas;
+    private long pontos;
     private long sistemas;
     private double indiceAlertasPorSistema;
 }

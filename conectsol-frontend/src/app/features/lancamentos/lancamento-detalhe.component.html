@@ -1,10 +1,17 @@
 <h2 mat-dialog-title>Detalhes do lançamento — {{ lancamento.cliente }}</h2>
 
 <div mat-dialog-content class="detalhe">
+  <h4>Equipe</h4>
+  <div class="grade">
+    <span><strong>Montador:</strong> {{ lancamento.montador || '-' }}</span>
+    <span><strong>Eletricista:</strong> {{ lancamento.eletricista || '-' }}</span>
+    <span><strong>Ajudante:</strong> {{ lancamento.ajudante || '-' }}</span>
+  </div>
+
   <h4>Instalação</h4>
   <div class="grade">
     <span><strong>Tipo de sistema:</strong> {{ lancamento.tipoSistema || '-' }}</span>
-    <span><strong>Telhado:</strong> {{ lancamento.telhado || '-' }}</span>
+    <span><strong>Instalação em solo:</strong> {{ lancamento.solo ? 'Sim' : 'Não' }}</span>
     <span><strong>Placas:</strong> {{ lancamento.placas ?? '-' }}</span>
     <span><strong>Strings (calculado):</strong> {{ lancamento.strings ?? '-' }}</span>
     <span><strong>Retornou material:</strong> {{ lancamento.retornou ? 'Sim' : 'Não' }}</span>
@@ -42,7 +49,10 @@
       <td>{{ lancamento.caboHeprUsado ?? '-' }}</td>
     </tr>
   </table>
-  <p class="dica" *ngIf="lancamento.ajusteFino">Ajuste fino aplicado: {{ lancamento.ajusteFino }}m</p>
+  <p class="dica" *ngIf="lancamento.ajusteFinoVerm || lancamento.ajusteFinoPreto || lancamento.ajusteFinoHepr">
+    Ajuste fino somado ao <strong>enviado</strong> — vermelho: {{ lancamento.ajusteFinoVerm ?? 0 }}m, preto:
+    {{ lancamento.ajusteFinoPreto ?? 0 }}m, HEPR: {{ lancamento.ajusteFinoHepr ?? 0 }}m
+  </p>
 
   <h4>Materiais</h4>
   <div class="grade">
@@ -53,6 +63,11 @@
       {{ lancamento.aproveitamento != null ? (lancamento.aproveitamento * 100 | number: '1.0-1') + '%' : '-' }}
     </span>
     <span><strong>Foto das sobras no grupo:</strong> {{ lancamento.fotoSobrasGrupo ? 'Sim' : 'Não' }}</span>
+  </div>
+
+  <h4>Controle de sobra</h4>
+  <div class="grade">
+    <span><strong>Localização da sobra:</strong> {{ lancamento.localizacaoSobra || '-' }}</span>
   </div>
 
   <h4>Observações</h4>

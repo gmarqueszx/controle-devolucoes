@@ -57,6 +57,19 @@ public class Alerta {
     @Builder.Default
     private StatusAlerta status = StatusAlerta.ABERTO;
 
+    /** Marca alertas gerados automaticamente (ex: CABO_ACIMA_MEDIA, APROVEITAMENTO_BAIXO). */
+    @Column(length = 30)
+    private String origem;
+
+    @Column(name = "confirmado_desvio_em")
+    private LocalDateTime confirmadoDesvioEm;
+
+    @Column(name = "confirmado_desvio_por", length = 100)
+    private String confirmadoDesvioPor;
+
+    @Column(name = "justificativa_confirmacao", columnDefinition = "TEXT")
+    private String justificativaConfirmacao;
+
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime criadoEm;

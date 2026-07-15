@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    mem_limit: 256m
+    environment:
+      POSTGRES_DB: conectsol
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    restart: unless-stopped
+    mem_limit: 480m
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/conectsol
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JAVA_TOOL_OPTIONS: -Xmx320m -Xss512k
+
+  web:
+    build: ./conectsol-frontend
+    restart: unless-stopped
+    mem_limit: 96m
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

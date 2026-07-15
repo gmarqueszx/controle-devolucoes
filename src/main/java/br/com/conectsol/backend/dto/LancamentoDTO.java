@@ -17,6 +17,7 @@ public class LancamentoDTO {
     private Long equipeId;
     private String montador;
     private String eletricista;
+    private String ajudante;
     private LocalDate dataLancamento;
     private String cliente;
     private Integer sistemas;
@@ -25,7 +26,7 @@ public class LancamentoDTO {
 
     private Boolean retornou;
     private String tipoSistema;
-    private String telhado;
+    private Boolean solo;
     private Integer placas;
     private Integer strings;
     private List<InversorDTO> inversores;
@@ -44,5 +45,9 @@ public class LancamentoDTO {
     private Integer qtdMateriaisDivergentes;
     private Double aproveitamento;
     private Boolean fotoSobrasGrupo;
-    private Double ajusteFino;
+    private Double ajusteFinoVerm;
+    private Double ajusteFinoPreto;
+    private Double ajusteFinoHepr;
+    private String localizacaoSobra;
+    private Long diasParado;
 }

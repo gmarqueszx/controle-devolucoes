@@ -2,16 +2,33 @@
 
 <form [formGroup]="form" (ngSubmit)="salvar()">
   <div mat-dialog-content>
-    <mat-form-field appearance="outline" class="campo">
-      <mat-label>Montador</mat-label>
-      <input matInput formControlName="montador" />
-      <mat-error *ngIf="form.controls.montador.hasError('required')">Montador é obrigatório</mat-error>
-    </mat-form-field>
+    <div formArrayName="membros">
+      <div class="linha-membro" *ngFor="let grupo of membrosArray.controls; let i = index" [formGroupName]="i">
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="nome" />
+          <mat-error *ngIf="grupo.get('nome')?.hasError('required')">Nome é obrigatório</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="campo">
-      <mat-label>Eletricista</mat-label>
-      <input matInput formControlName="eletricista" />
-    </mat-form-field>
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Função</mat-label>
+          <mat-select formControlName="funcao">
+            <mat-option *ngFor="let f of funcoes" [value]="f.valor">{{ f.rotulo }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-icon-button type="button" (click)="removerMembro(i)" title="Remover membro">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <button mat-stroked-button type="button" (click)="adicionarMembro()">
+      <mat-icon>add</mat-icon>
+      Adicionar pessoa
+    </button>
+
+    <p class="erro-montador" *ngIf="!temMontador">A equipe precisa de ao menos um montador.</p>
   </div>
 
   <div mat-dialog-actions align="end">

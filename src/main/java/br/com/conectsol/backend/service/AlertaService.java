@@ -3,6 +3,7 @@ package br.com.conectsol.backend.service;
 import br.com.conectsol.backend.dto.AlertaDTO;
 import br.com.conectsol.backend.dto.AlertaRequest;
 import br.com.conectsol.backend.dto.AlertaStatusRequest;
+import br.com.conectsol.backend.dto.ConfirmarDesvioRequest;
 import br.com.conectsol.backend.exception.RecursoNaoEncontradoException;
 import br.com.conectsol.backend.model.Alerta;
 import br.com.conectsol.backend.model.Equipe;
@@ -10,6 +11,7 @@ import br.com.conectsol.backend.model.Lancamento;
 import br.com.conectsol.backend.model.NivelAlerta;
 import br.com.conectsol.backend.repository.AlertaRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -72,17 +74,33 @@ public class AlertaService {
         return paraDTO(alertaRepository.save(alerta));
     }
 
+    @Transactional
+    public AlertaDTO confirmarDesvio(Long id, ConfirmarDesvioRequest request) {
+        Alerta alerta = alertaRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Alerta nao encontrado"));
+        alerta.setNivel(NivelAlerta.ALTO);
+        alerta.setConfirmadoDesvioEm(LocalDateTime.now());
+        alerta.setConfirmadoDesvioPor(request.getConfirmadoPor());
+        alerta.setJustificativaConfirmacao(request.getJustificativa());
+        return paraDTO(alertaRepository.save(alerta));
+    }
+
     private AlertaDTO paraDTO(Alerta alerta) {
         return AlertaDTO.builder()
                 .id(alerta.getId())
                 .equipeId(alerta.getEquipe().getId())
                 .montador(alerta.getEquipe().getMontador())
                 .eletricista(alerta.getEquipe().getEletricista())
+                .cliente(alerta.getLancamento() != null ? alerta.getLancamento().getCliente() : null)
                 .dataAlerta(alerta.getDataAlerta())
                 .descricao(alerta.getDescricao())
                 .nivel(alerta.getNivel())
                 .status(alerta.getStatus())
                 .statusOriginal(alerta.getStatusOriginal())
+                .origem(alerta.getOrigem())
+                .confirmadoDesvioEm(alerta.getConfirmadoDesvioEm())
+                .confirmadoDesvioPor(alerta.getConfirmadoDesvioPor())
+                .justificativaConfirmacao(alerta.getJustificativaConfirmacao())
                 .build();
     }
 }

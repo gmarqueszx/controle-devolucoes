@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Lancamento, LancamentoRequest } from '../models/lancamento.model';
+import { Lancamento, LancamentoRequest, MediaCaboUso } from '../models/lancamento.model';
 
 @Injectable({ providedIn: 'root' })
 export class LancamentoService {
@@ -22,11 +22,27 @@ export class LancamentoService {
     return this.http.get<Lancamento>(`${this.apiUrl}/${id}`);
   }
 
+  listarSobrasPendentes(): Observable<Lancamento[]> {
+    return this.http.get<Lancamento[]>(`${this.apiUrl}/sobras-pendentes`);
+  }
+
   criar(request: LancamentoRequest): Observable<Lancamento> {
     return this.http.post<Lancamento>(this.apiUrl, request);
   }
 
+  atualizar(id: number, request: LancamentoRequest): Observable<Lancamento> {
+    return this.http.put<Lancamento>(`${this.apiUrl}/${id}`, request);
+  }
+
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  recalcularAlertas(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/recalcular-alertas`, {});
+  }
+
+  consultarMediasUso(): Observable<MediaCaboUso[]> {
+    return this.http.get<MediaCaboUso[]>(`${this.apiUrl}/medias-uso`);
   }
 }

@@ -29,13 +29,23 @@ import { RelatorioService } from '../../core/services/relatorio.service';
   styleUrl: './relatorio-equipes.component.scss'
 })
 export class RelatorioEquipesComponent implements AfterViewInit {
-  displayedColumns = ['montador', 'eletricista', 'alto', 'medio', 'leve', 'totalAlertas', 'sistemas', 'indice'];
+  displayedColumns = [
+    'montador',
+    'eletricista',
+    'alto',
+    'medio',
+    'leve',
+    'totalAlertas',
+    'pontos',
+    'sistemas',
+    'indice'
+  ];
   dataSource = new MatTableDataSource<RelatorioEquipe>([]);
 
   @ViewChild(MatSort) sort!: MatSort;
 
   periodoForm = this.fb.group({
-    start: this.primeiroDiaDoMes(),
+    start: this.inicioPeriodoPadrao(),
     end: new Date()
   });
 
@@ -75,9 +85,9 @@ export class RelatorioEquipesComponent implements AfterViewInit {
       .subscribe((relatorio) => (this.dataSource.data = relatorio));
   }
 
-  private primeiroDiaDoMes(): Date {
+  private inicioPeriodoPadrao(): Date {
     const hoje = new Date();
-    return new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    return new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
   }
 
   private paraIso(data: Date): string {

@@ -55,8 +55,7 @@ public class Lancamento {
     @Column(name = "tipo_sistema", length = 50)
     private String tipoSistema;
 
-    @Column(length = 50)
-    private String telhado;
+    private Boolean solo;
 
     private Integer placas;
 
@@ -68,7 +67,7 @@ public class Lancamento {
     @Builder.Default
     private List<LancamentoInversor> inversores = new ArrayList<>();
 
-    /** Calculados automaticamente pelo CaboCalculator a partir de telhado, strings e qtd. de inversores. */
+    /** Calculados automaticamente pelo CaboCalculator a partir de solo, strings e qtd. de inversores. */
     @Column(name = "cabo_solar_verm_enviado")
     private Double caboSolarVermEnviado;
 
@@ -108,9 +107,18 @@ public class Lancamento {
     @Column(name = "foto_sobras_grupo")
     private Boolean fotoSobrasGrupo;
 
-    /** Ajuste manual opcional (em metros), somado ao cabo enviado calculado. */
-    @Column(name = "ajuste_fino")
-    private Double ajusteFino;
+    /** Ajustes manuais opcionais (em metros), somados ao cabo enviado calculado de cada cor. */
+    @Column(name = "ajuste_fino_verm")
+    private Double ajusteFinoVerm;
+
+    @Column(name = "ajuste_fino_preto")
+    private Double ajusteFinoPreto;
+
+    @Column(name = "ajuste_fino_hepr")
+    private Double ajusteFinoHepr;
+
+    @Column(name = "localizacao_sobra", length = 200)
+    private String localizacaoSobra;
 
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)

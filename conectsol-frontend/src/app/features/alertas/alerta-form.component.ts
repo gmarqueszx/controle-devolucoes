@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { AlertaRequest } from '../../core/models/alerta.model';
 import { Equipe } from '../../core/models/equipe.model';
+import { EquipeNomePipe } from '../../shared/pipes/equipe-nome.pipe';
 
 export interface AlertaFormDialogData {
   equipes: Equipe[];
@@ -27,7 +28,8 @@ export interface AlertaFormDialogData {
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    EquipeNomePipe
   ],
   templateUrl: './alerta-form.component.html'
 })

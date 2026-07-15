@@ -9,31 +9,40 @@ class CaboCalculatorTest {
     private final CaboCalculator calculator = new CaboCalculator();
 
     @Test
-    void deveCalcularCaboParaTelhadoPadraoComUmInversor() {
-        ResultadoCabo resultado = calculator.calcular("ZINCO", 2, 1);
+    void deveCalcularCaboParaTelhadoComumComUmInversor() {
+        ResultadoCabo resultado = calculator.calcular(false, "PROJETO", 2, 1);
         assertThat(resultado.verm()).isEqualTo(60);
         assertThat(resultado.preto()).isEqualTo(60);
         assertThat(resultado.hepr()).isEqualTo(90);
     }
 
     @Test
-    void deveCalcularCaboParaTelhadoSoloComDoisInversores() {
-        ResultadoCabo resultado = calculator.calcular("SOLO", 3, 2);
+    void deveCalcularCaboParaSoloComDoisInversores() {
+        ResultadoCabo resultado = calculator.calcular(true, "PROJETO", 3, 2);
         assertThat(resultado.verm()).isEqualTo(180);
         assertThat(resultado.preto()).isEqualTo(180);
         assertThat(resultado.hepr()).isEqualTo(180);
     }
 
     @Test
-    void deveTratarSoloIndependenteDeCaixaOuEspacos() {
-        ResultadoCabo resultado = calculator.calcular("  solo  ", 1, 1);
-        assertThat(resultado.verm()).isEqualTo(60);
+    void deveUsarBasePadraoQuandoSoloFalso() {
+        ResultadoCabo resultado = calculator.calcular(false, "PROJETO", 1, 1);
+        assertThat(resultado.verm()).isEqualTo(30);
+        assertThat(resultado.hepr()).isEqualTo(90);
     }
 
     @Test
-    void deveUsarBasePadraoQuandoTelhadoNulo() {
-        ResultadoCabo resultado = calculator.calcular(null, 1, 1);
-        assertThat(resultado.verm()).isEqualTo(30);
-        assertThat(resultado.hepr()).isEqualTo(90);
+    void deveUsarHeprFixoEmAmpliacaoIndependenteDeInversores() {
+        ResultadoCabo resultado = calculator.calcular(false, "AMPLIACAO", 2, 3);
+        assertThat(resultado.hepr()).isEqualTo(30);
+        assertThat(resultado.verm()).isEqualTo(60);
+        assertThat(resultado.preto()).isEqualTo(60);
+    }
+
+    @Test
+    void deveUsarHeprFixoEmAmpliacaoNoSolo() {
+        ResultadoCabo resultado = calculator.calcular(true, "AMPLIACAO", 1, 4);
+        assertThat(resultado.hepr()).isEqualTo(30);
+        assertThat(resultado.verm()).isEqualTo(60);
     }
 }

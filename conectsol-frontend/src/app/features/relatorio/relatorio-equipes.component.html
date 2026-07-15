@@ -43,6 +43,11 @@
         <td mat-cell *matCellDef="let item">{{ item.totalAlertas }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="pontos">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Pontos</th>
+        <td mat-cell *matCellDef="let item"><strong>{{ item.pontos }}</strong></td>
+      </ng-container>
+
       <ng-container matColumnDef="sistemas">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Sistemas</th>
         <td mat-cell *matCellDef="let item">{{ item.sistemas }}</td>

@@ -28,6 +28,10 @@ public class RelatorioService {
     private static final String[] MESES_PT =
             {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"};
 
+    private static final long PONTOS_ALTO = 5;
+    private static final long PONTOS_MEDIO = 3;
+    private static final long PONTOS_LEVE = 1;
+
     private final AlertaRepository alertaRepository;
     private final LancamentoRepository lancamentoRepository;
     private final EquipeRepository equipeRepository;
@@ -62,6 +66,7 @@ public class RelatorioService {
             long medio = contarPorNivel(alertasEquipe, NivelAlerta.MEDIO);
             long leve = contarPorNivel(alertasEquipe, NivelAlerta.LEVE);
             long total = alertasEquipe.size();
+            long pontos = alto * PONTOS_ALTO + medio * PONTOS_MEDIO + leve * PONTOS_LEVE;
             long sistemas = lancamentosEquipe.stream()
                     .mapToLong(l -> l.getSistemas() == null ? 0 : l.getSistemas())
                     .sum();
@@ -70,10 +75,12 @@ public class RelatorioService {
             resultado.add(RelatorioEquipeDTO.builder()
                     .montador(equipe != null ? equipe.getMontador() : null)
                     .eletricista(equipe != null ? equipe.getEletricista() : null)
+                    .ajudante(equipe != null ? equipe.getAjudante() : null)
                     .alto(alto)
                     .medio(medio)
                     .leve(leve)
                     .totalAlertas(total)
+                    .pontos(pontos)
                     .sistemas(sistemas)
                     .indiceAlertasPorSistema(indice)
                     .build());

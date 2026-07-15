@@ -1,5 +1,6 @@
 package br.com.conectsol.backend.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
@@ -15,8 +16,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LancamentoRequest {
 
-    @NotNull(message = "Equipe e obrigatoria")
-    private Long equipeId;
+    @NotBlank(message = "Montador e obrigatorio")
+    private String montador;
+
+    private String eletricista;
+    private String ajudante;
 
     @NotNull(message = "Data do lancamento e obrigatoria")
     private LocalDate dataLancamento;
@@ -33,7 +37,7 @@ public class LancamentoRequest {
 
     private Boolean retornou;
     private String tipoSistema;
-    private String telhado;
+    private Boolean solo;
     private Integer placas;
 
     @Builder.Default
@@ -47,6 +51,10 @@ public class LancamentoRequest {
     private Integer qtdMateriaisDivergentes;
     private Boolean fotoSobrasGrupo;
 
-    /** Ajuste manual opcional (em metros), somado ao cabo enviado calculado. */
-    private Double ajusteFino;
+    /** Ajustes manuais opcionais (em metros), somados ao cabo enviado calculado de cada cor. */
+    private Double ajusteFinoVerm;
+    private Double ajusteFinoPreto;
+    private Double ajusteFinoHepr;
+
+    private String localizacaoSobra;
 }

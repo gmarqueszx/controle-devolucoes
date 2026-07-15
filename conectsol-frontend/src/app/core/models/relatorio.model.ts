@@ -1,10 +1,12 @@
 export interface RelatorioEquipe {
   montador: string;
   eletricista: string;
+  ajudante: string;
   alto: number;
   medio: number;
   leve: number;
   totalAlertas: number;
+  pontos: number;
   sistemas: number;
   indiceAlertasPorSistema: number;
 }
@@ -18,9 +20,8 @@ export interface TendenciaMensal {
 }
 
 export interface DashboardStats {
-  alertasHoje: number;
-  alertasSemana: number;
-  alertasMes: number;
-  equipesAtivas: number;
-  sistemasMes: number;
+  sistemasPeriodo: number;
+  percentualAproveitamento100: number | null;
+  sobrasPendentes: number;
+  alertasAltoPeriodo: number;
 }

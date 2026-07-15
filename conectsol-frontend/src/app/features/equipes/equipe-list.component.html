@@ -19,6 +19,11 @@
         <td mat-cell *matCellDef="let equipe">{{ equipe.eletricista }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="ajudante">
+        <th mat-header-cell *matHeaderCellDef>Ajudante</th>
+        <td mat-cell *matCellDef="let equipe">{{ equipe.ajudante || '-' }}</td>
+      </ng-container>
+
       <ng-container matColumnDef="ativa">
         <th mat-header-cell *matHeaderCellDef>Status</th>
         <td mat-cell *matCellDef="let equipe">{{ equipe.ativa ? 'Ativa' : 'Inativa' }}</td>

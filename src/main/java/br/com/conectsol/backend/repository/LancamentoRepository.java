@@ -16,4 +16,26 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
     @Query("select coalesce(sum(l.sistemas), 0) from Lancamento l "
             + "where l.dataLancamento between :de and :ate")
     Integer somarSistemasNoPeriodo(@Param("de") LocalDate de, @Param("ate") LocalDate ate);
+
+    /**
+     * Médias históricas (só de lançamentos já retornados). Vermelho e preto são cabo solar, calculados
+     * por string (cada string consome uma metragem parecida, independente do tamanho da instalação); HEPR é o
+     * total do lançamento, já que não varia por string. Solo usa base de cálculo diferente do telhado comum
+     * (60m/string vs 30m/string), então são comparados separadamente — misturar os dois distorce a média.
+     */
+    @Query("select avg(l.caboSolarVermUsado / l.strings), avg(l.caboSolarPretoUsado / l.strings), avg(l.caboHeprUsado) "
+            + "from Lancamento l where l.retornou = true and l.tipoSistema = :tipoSistema and l.id <> :excluirId "
+            + "and l.strings is not null and l.strings > 0 and l.solo = :solo")
+    List<Object[]> calcularMediasUso(
+            @Param("tipoSistema") String tipoSistema, @Param("excluirId") Long excluirId, @Param("solo") boolean solo);
+
+    /** Mesma média usada nos alertas automáticos, mas com a contagem de amostras, para exibir na tela. */
+    @Query("select count(l), avg(l.caboSolarVermUsado / l.strings), avg(l.caboSolarPretoUsado / l.strings), "
+            + "avg(l.caboHeprUsado) from Lancamento l where l.retornou = true and l.tipoSistema = :tipoSistema "
+            + "and l.strings is not null and l.strings > 0 and l.solo = :solo")
+    List<Object[]> consultarMediasUso(@Param("tipoSistema") String tipoSistema, @Param("solo") boolean solo);
+
+    List<Lancamento> findByRetornouFalseOrderByDataLancamentoAsc();
+
+    List<Lancamento> findByRetornouTrue();
 }

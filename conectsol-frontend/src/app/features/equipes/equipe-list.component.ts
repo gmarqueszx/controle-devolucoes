@@ -18,7 +18,7 @@ import { EquipeFormComponent } from './equipe-form.component';
   styleUrl: './equipe-list.component.scss'
 })
 export class EquipeListComponent implements OnInit {
-  displayedColumns = ['montador', 'eletricista', 'ativa', 'acoes'];
+  displayedColumns = ['montador', 'eletricista', 'ajudante', 'ativa', 'acoes'];
   equipes: Equipe[] = [];
 
   constructor(

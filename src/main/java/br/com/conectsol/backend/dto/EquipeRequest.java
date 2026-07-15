@@ -1,6 +1,7 @@
 package br.com.conectsol.backend.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EquipeRequest {
 
-    @NotBlank(message = "Montador e obrigatorio")
-    private String montador;
-
-    private String eletricista;
+    @Valid
+    @Builder.Default
+    private List<EquipeMembroRequest> membros = List.of();
 }

@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -28,6 +29,7 @@ interface SerieLinha {
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -42,7 +44,7 @@ export class DashboardComponent implements OnInit {
   tendencia: SerieLinha[] = [];
 
   periodoForm = this.fb.group({
-    start: this.primeiroDiaDoMes(),
+    start: this.inicioPeriodoPadrao(),
     end: new Date()
   });
 
@@ -58,11 +60,19 @@ export class DashboardComponent implements OnInit {
   }
 
   aoMudarPeriodo(): void {
+    this.carregarStats();
     this.carregarTopEquipes();
   }
 
   private carregarStats(): void {
-    this.relatorioService.dashboardStats().subscribe((stats) => (this.stats = stats));
+    const inicio = this.periodoForm.controls.start.value;
+    const fim = this.periodoForm.controls.end.value;
+    if (!inicio || !fim) {
+      return;
+    }
+    this.relatorioService
+      .dashboardStats(this.paraIso(inicio), this.paraIso(fim))
+      .subscribe((stats) => (this.stats = stats));
   }
 
   private carregarTendencia(): void {
@@ -85,15 +95,18 @@ export class DashboardComponent implements OnInit {
     this.relatorioService.relatorioEquipes(this.paraIso(inicio), this.paraIso(fim)).subscribe((relatorio) => {
       this.topEquipes = relatorio
         .slice()
-        .sort((a, b) => b.totalAlertas - a.totalAlertas)
+        .sort((a, b) => b.pontos - a.pontos)
         .slice(0, 10)
-        .map((r) => ({ name: r.montador, value: r.totalAlertas }));
+        .map((r) => ({
+          name: [r.montador, r.eletricista, r.ajudante].filter(Boolean).join(' / '),
+          value: r.pontos
+        }));
     });
   }
 
-  private primeiroDiaDoMes(): Date {
+  private inicioPeriodoPadrao(): Date {
     const hoje = new Date();
-    return new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    return new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
   }
 
   private paraIso(data: Date): string {

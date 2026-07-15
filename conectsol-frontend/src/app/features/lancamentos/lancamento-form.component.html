@@ -1,24 +1,82 @@
 <mat-card class="form-card">
   <mat-card-header>
-    <mat-card-title>Novo lançamento</mat-card-title>
+    <mat-card-title>{{ modoEdicao ? 'Editar lançamento' : 'Novo lançamento' }}</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="salvar()">
-      <h3>Instalação</h3>
+      <h3>Equipe da obra</h3>
+      <p class="dica">
+        Escolha os nomes na lista. Se a pessoa ainda não existir, digite o nome e clique na opção "+ Adicionar
+        novo" que aparece — só assim o sistema aceita um nome fora da lista, pra evitar erro de digitação.
+      </p>
       <div class="linha">
         <mat-form-field appearance="outline" class="campo">
-          <mat-label>Equipe</mat-label>
-          <input matInput formControlName="equipe" [matAutocomplete]="auto" />
-          <mat-autocomplete #auto="matAutocomplete" [displayWith]="exibirEquipe">
-            <mat-option *ngFor="let equipe of equipesFiltradas$ | async" [value]="equipe">
-              {{ equipe.montador }}
+          <mat-label>Montador</mat-label>
+          <input
+            matInput
+            formControlName="montador"
+            [matAutocomplete]="autoMontador"
+          />
+          <mat-autocomplete #autoMontador="matAutocomplete" (optionSelected)="onNomeSelecionado('montador', $event)">
+            <mat-option *ngFor="let opcao of montadoresOpcoes$ | async" [value]="opcao.valor" [class.opcao-nova]="opcao.ehNovo">
+              {{ opcao.ehNovo ? '+ Adicionar novo: "' + opcao.valor + '"' : opcao.valor }}
             </mat-option>
           </mat-autocomplete>
-          <mat-error *ngIf="form.controls.equipe.hasError('required')">Equipe é obrigatória</mat-error>
-          <mat-error *ngIf="form.controls.equipe.hasError('equipeInvalida')">Selecione uma equipe válida</mat-error>
+          <mat-error *ngIf="form.controls.montador.hasError('required')">Montador é obrigatório</mat-error>
+          <mat-error *ngIf="form.controls.montador.hasError('naoConfirmado')">
+            Selecione um nome da lista ou clique em "+ Adicionar novo"
+          </mat-error>
         </mat-form-field>
 
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Eletricista</mat-label>
+          <input
+            matInput
+            formControlName="eletricista"
+            [matAutocomplete]="autoEletricista"
+          />
+          <mat-autocomplete
+            #autoEletricista="matAutocomplete"
+            (optionSelected)="onNomeSelecionado('eletricista', $event)"
+          >
+            <mat-option
+              *ngFor="let opcao of eletricistasOpcoes$ | async"
+              [value]="opcao.valor"
+              [class.opcao-nova]="opcao.ehNovo"
+            >
+              {{ opcao.ehNovo ? '+ Adicionar novo: "' + opcao.valor + '"' : opcao.valor }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.eletricista.hasError('naoConfirmado')">
+            Selecione um nome da lista ou clique em "+ Adicionar novo"
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Ajudante</mat-label>
+          <input
+            matInput
+            formControlName="ajudante"
+            [matAutocomplete]="autoAjudante"
+          />
+          <mat-autocomplete #autoAjudante="matAutocomplete" (optionSelected)="onNomeSelecionado('ajudante', $event)">
+            <mat-option
+              *ngFor="let opcao of ajudantesOpcoes$ | async"
+              [value]="opcao.valor"
+              [class.opcao-nova]="opcao.ehNovo"
+            >
+              {{ opcao.ehNovo ? '+ Adicionar novo: "' + opcao.valor + '"' : opcao.valor }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.ajudante.hasError('naoConfirmado')">
+            Selecione um nome da lista ou clique em "+ Adicionar novo"
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <h3>Instalação</h3>
+      <div class="linha">
         <mat-form-field appearance="outline" class="campo">
           <mat-label>Data do lançamento</mat-label>
           <input matInput [matDatepicker]="dp" formControlName="dataLancamento" />
@@ -48,19 +106,12 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="campo">
-          <mat-label>Telhado</mat-label>
-          <mat-select formControlName="telhado">
-            <mat-option *ngFor="let telhado of telhados" [value]="telhado">{{ telhado }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.controls.telhado.hasError('required')">Telhado é obrigatório</mat-error>
-        </mat-form-field>
-
         <mat-form-field appearance="outline" class="campo-pequeno">
           <mat-label>Placas</mat-label>
           <input matInput type="number" formControlName="placas" />
         </mat-form-field>
 
+        <mat-checkbox formControlName="solo">Instalação em solo</mat-checkbox>
         <mat-checkbox formControlName="retornou">Retornou material</mat-checkbox>
       </div>
 
@@ -85,7 +136,29 @@
         Adicionar inversor
       </button>
 
-      <h3>Cabos devolvidos (m)</h3>
+      <h3>Cabo enviado — ajuste fino (m)</h3>
+      <p class="dica">
+        Strings e cabo enviado são calculados automaticamente ao salvar (solo, tipo de sistema e inversores). Use os campos abaixo
+        só para corrigir a folga real do rolo de cada cor — o valor é somado ao <strong>enviado</strong>, não ao
+        devolvido.
+      </p>
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Ajuste fino — vermelho</mat-label>
+          <input matInput type="number" formControlName="ajusteFinoVerm" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Ajuste fino — preto</mat-label>
+          <input matInput type="number" formControlName="ajusteFinoPreto" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="campo-pequeno">
+          <mat-label>Ajuste fino — HEPR</mat-label>
+          <input matInput type="number" formControlName="ajusteFinoHepr" />
+        </mat-form-field>
+      </div>
+
+      <h3>Cabo devolvido (m)</h3>
+      <p class="dica">Metragem que a equipe trouxe de volta de cada cor, depois de usar no local.</p>
       <div class="linha">
         <mat-form-field appearance="outline" class="campo-pequeno">
           <mat-label>Solar vermelho</mat-label>
@@ -99,24 +172,28 @@
           <mat-label>HEPR</mat-label>
           <input matInput type="number" formControlName="caboHeprDevolvido" />
         </mat-form-field>
-        <mat-form-field appearance="outline" class="campo-pequeno">
-          <mat-label>Ajuste fino (m)</mat-label>
-          <input matInput type="number" formControlName="ajusteFino" />
-        </mat-form-field>
       </div>
-      <p class="dica">Strings e cabo enviado são calculados automaticamente ao salvar.</p>
 
       <h3>Materiais</h3>
       <div class="linha">
         <mat-form-field appearance="outline" class="campo-pequeno">
           <mat-label>Qtd. materiais enviados</mat-label>
           <input matInput type="number" formControlName="qtdMateriaisEnviados" />
+          <mat-hint *ngIf="form.controls.qtdMateriaisEnviados.disabled">Calculado automaticamente pelo tipo de sistema</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline" class="campo-pequeno">
           <mat-label>Qtd. materiais divergentes</mat-label>
           <input matInput type="number" formControlName="qtdMateriaisDivergentes" />
         </mat-form-field>
         <mat-checkbox formControlName="fotoSobrasGrupo">Foto das sobras no grupo</mat-checkbox>
+      </div>
+
+      <h3>Controle de sobra</h3>
+      <div class="linha">
+        <mat-form-field appearance="outline" class="campo">
+          <mat-label>Localização da sobra</mat-label>
+          <input matInput formControlName="localizacaoSobra" placeholder="Ex: Galpão A, com a equipe X" />
+        </mat-form-field>
       </div>
 
       <h3>Observações</h3>

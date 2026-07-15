@@ -42,6 +42,7 @@ export class SidebarComponent {
     { label: 'Relatório', path: '/relatorio', icon: 'bar_chart' },
     { label: 'Lançamentos', path: '/lancamentos', icon: 'assignment' },
     { label: 'Alertas', path: '/alertas', icon: 'warning' },
+    { label: 'Sobras pendentes', path: '/sobras', icon: 'inventory_2' },
     { label: 'Equipes', path: '/equipes', icon: 'groups' }
   ];
 }

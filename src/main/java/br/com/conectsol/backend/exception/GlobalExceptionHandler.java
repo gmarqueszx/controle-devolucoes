@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<ErroResponse> tratarRecursoNaoEncontrado(
@@ -31,6 +35,12 @@ public class GlobalExceptionHandler {
         return construirResposta(HttpStatus.FORBIDDEN, "Sem permissao para esta acao", request);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErroResponse> tratarArgumentoInvalido(
+            IllegalArgumentException ex, HttpServletRequest request) {
+        return construirResposta(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> tratarValidacao(
             MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -42,6 +52,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResponse> tratarErroGenerico(Exception ex, HttpServletRequest request) {
+        log.error("Erro nao tratado em {}", request.getRequestURI(), ex);
         return construirResposta(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno. Tente novamente.", request);
     }
 

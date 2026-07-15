@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Alerta, AlertaRequest } from '../models/alerta.model';
+import { Alerta, AlertaRequest, ConfirmarDesvioRequest } from '../models/alerta.model';
 
 @Injectable({ providedIn: 'root' })
 export class AlertaService {
@@ -27,5 +27,9 @@ export class AlertaService {
 
   atualizarStatus(id: number, status: Alerta['status']): Observable<Alerta> {
     return this.http.put<Alerta>(`${this.apiUrl}/${id}/status`, { status });
+  }
+
+  confirmarDesvio(id: number, request: ConfirmarDesvioRequest): Observable<Alerta> {
+    return this.http.put<Alerta>(`${this.apiUrl}/${id}/confirmar-desvio`, request);
   }
 }

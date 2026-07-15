@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Confirmar desvio</h2>
+
+<form [formGroup]="form" (ngSubmit)="confirmar()">
+  <div mat-dialog-content>
+    <p>A investigação comprovou desvio, roubo ou outro motivo? O alerta será marcado como Alto.</p>
+    <mat-form-field appearance="outline" class="campo">
+      <mat-label>Justificativa</mat-label>
+      <textarea matInput formControlName="justificativa" rows="3"></textarea>
+      <mat-error *ngIf="form.controls.justificativa.hasError('required')">Justificativa é obrigatória</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="warn" type="submit">Confirmar desvio</button>
+  </div>
+</form>

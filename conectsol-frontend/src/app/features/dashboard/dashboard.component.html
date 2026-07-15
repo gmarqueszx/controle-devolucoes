@@ -1,24 +1,37 @@
 <div class="dashboard">
   <div class="kpis" *ngIf="stats as s">
     <mat-card class="kpi">
-      <span class="kpi-valor">{{ s.alertasMes }}</span>
-      <span class="kpi-label">Total de alertas do mês</span>
+      <mat-icon class="kpi-icone">bolt</mat-icon>
+      <div class="kpi-corpo">
+        <span class="kpi-valor">{{ s.sistemasPeriodo }}</span>
+        <span class="kpi-label">Sistemas lançados no período</span>
+      </div>
     </mat-card>
+
+    <mat-card class="kpi kpi-sucesso">
+      <mat-icon class="kpi-icone">verified</mat-icon>
+      <div class="kpi-corpo">
+        <span class="kpi-valor">
+          {{ s.percentualAproveitamento100 !== null ? (s.percentualAproveitamento100 | number: '1.0-0') + '%' : '—' }}
+        </span>
+        <span class="kpi-label">Sistemas com aproveitamento 100%</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi kpi-alerta">
+      <mat-icon class="kpi-icone">inventory_2</mat-icon>
+      <div class="kpi-corpo">
+        <span class="kpi-valor">{{ s.sobrasPendentes }}</span>
+        <span class="kpi-label">Sobras pendentes de retorno</span>
+      </div>
+    </mat-card>
+
     <mat-card class="kpi kpi-alto">
-      <span class="kpi-valor">{{ s.alertasHoje }}</span>
-      <span class="kpi-label">Alertas hoje</span>
-    </mat-card>
-    <mat-card class="kpi">
-      <span class="kpi-valor">{{ s.equipesAtivas }}</span>
-      <span class="kpi-label">Equipes ativas</span>
-    </mat-card>
-    <mat-card class="kpi">
-      <span class="kpi-valor">{{ s.sistemasMes }}</span>
-      <span class="kpi-label">Sistemas lançados</span>
-    </mat-card>
-    <mat-card class="kpi">
-      <span class="kpi-valor">{{ s.alertasSemana }}</span>
-      <span class="kpi-label">Alertas na semana</span>
+      <mat-icon class="kpi-icone">warning</mat-icon>
+      <div class="kpi-corpo">
+        <span class="kpi-valor">{{ s.alertasAltoPeriodo }}</span>
+        <span class="kpi-label">Alertas de alto risco no período</span>
+      </div>
     </mat-card>
   </div>
 
@@ -36,7 +49,7 @@
 
   <div class="graficos">
     <mat-card class="grafico">
-      <h3>Top 10 equipes por alertas</h3>
+      <h3>Top 10 equipes por pontos de alerta</h3>
       <ngx-charts-bar-horizontal
         [results]="topEquipes"
         [xAxis]="true"

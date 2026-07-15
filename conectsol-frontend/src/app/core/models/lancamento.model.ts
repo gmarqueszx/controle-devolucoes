@@ -3,11 +3,21 @@ export interface Inversor {
   quantidade: number;
 }
 
+export interface MediaCaboUso {
+  tipoSistema: string;
+  solo: boolean;
+  amostras: number;
+  mediaSolarVermPorString: number | null;
+  mediaSolarPretoPorString: number | null;
+  mediaHeprTotal: number | null;
+}
+
 export interface Lancamento {
   id: number;
   equipeId: number;
   montador: string;
   eletricista: string;
+  ajudante: string;
   dataLancamento: string; // yyyy-MM-dd
   cliente: string;
   sistemas: number;
@@ -16,7 +26,7 @@ export interface Lancamento {
 
   retornou: boolean | null;
   tipoSistema: string | null;
-  telhado: string | null;
+  solo: boolean | null;
   placas: number | null;
   strings: number | null;
   inversores: Inversor[];
@@ -35,11 +45,17 @@ export interface Lancamento {
   qtdMateriaisDivergentes: number | null;
   aproveitamento: number | null;
   fotoSobrasGrupo: boolean | null;
-  ajusteFino: number | null;
+  ajusteFinoVerm: number | null;
+  ajusteFinoPreto: number | null;
+  ajusteFinoHepr: number | null;
+  localizacaoSobra: string | null;
+  diasParado: number | null;
 }
 
 export interface LancamentoRequest {
-  equipeId: number;
+  montador: string;
+  eletricista?: string;
+  ajudante?: string;
   dataLancamento: string;
   cliente: string;
   sistemas: number;
@@ -48,7 +64,7 @@ export interface LancamentoRequest {
 
   retornou?: boolean;
   tipoSistema?: string;
-  telhado?: string;
+  solo?: boolean;
   placas?: number;
   inversores?: Inversor[];
 
@@ -59,5 +75,8 @@ export interface LancamentoRequest {
   qtdMateriaisEnviados?: number;
   qtdMateriaisDivergentes?: number;
   fotoSobrasGrupo?: boolean;
-  ajusteFino?: number;
+  ajusteFinoVerm?: number;
+  ajusteFinoPreto?: number;
+  ajusteFinoHepr?: number;
+  localizacaoSobra?: string;
 }

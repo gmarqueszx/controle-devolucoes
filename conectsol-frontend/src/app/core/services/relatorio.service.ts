@@ -21,7 +21,8 @@ export class RelatorioService {
     return this.http.get<TendenciaMensal[]>(`${this.apiUrl}/tendencia`, { params });
   }
 
-  dashboardStats(): Observable<DashboardStats> {
-    return this.http.get<DashboardStats>(`${this.dashboardUrl}/stats`);
+  dashboardStats(de: string, ate: string): Observable<DashboardStats> {
+    const params = new HttpParams().set('de', de).set('ate', ate);
+    return this.http.get<DashboardStats>(`${this.dashboardUrl}/stats`, { params });
   }
 }

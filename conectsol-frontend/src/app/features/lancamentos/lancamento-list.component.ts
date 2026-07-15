@@ -18,6 +18,7 @@ import { Lancamento } from '../../core/models/lancamento.model';
 import { AuthService } from '../../core/services/auth.service';
 import { EquipeService } from '../../core/services/equipe.service';
 import { LancamentoService } from '../../core/services/lancamento.service';
+import { EquipeNomePipe } from '../../shared/pipes/equipe-nome.pipe';
 import { LancamentoDetalheComponent } from './lancamento-detalhe.component';
 
 @Component({
@@ -36,7 +37,8 @@ import { LancamentoDetalheComponent } from './lancamento-detalhe.component';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    EquipeNomePipe
   ],
   templateUrl: './lancamento-list.component.html',
   styleUrl: './lancamento-list.component.scss'
@@ -48,7 +50,7 @@ export class LancamentoListComponent implements OnInit {
     'eletricista',
     'cliente',
     'sistemas',
-    'telhado',
+    'solo',
     'strings',
     'aproveitamento',
     'acoes'
@@ -57,7 +59,7 @@ export class LancamentoListComponent implements OnInit {
   equipes: Equipe[] = [];
 
   filtroForm = this.fb.group({
-    start: this.primeiroDiaDoMes(),
+    start: this.inicioPeriodoPadrao(),
     end: new Date(),
     equipeId: null as number | null
   });
@@ -108,9 +110,9 @@ export class LancamentoListComponent implements OnInit {
       .subscribe((lancamentos) => (this.lancamentos = lancamentos));
   }
 
-  private primeiroDiaDoMes(): Date {
+  private inicioPeriodoPadrao(): Date {
     const hoje = new Date();
-    return new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    return new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1);
   }
 
   private paraIso(data: Date): string {
