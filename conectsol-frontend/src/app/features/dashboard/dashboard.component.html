@@ -1,75 +1,101 @@
 <div class="dashboard">
-  <div class="kpis" *ngIf="stats as s">
-    <mat-card class="kpi">
-      <mat-icon class="kpi-icone">bolt</mat-icon>
-      <div class="kpi-corpo">
-        <span class="kpi-valor">{{ s.sistemasPeriodo }}</span>
-        <span class="kpi-label">Sistemas lançados no período</span>
-      </div>
+  <div class="barra-acoes">
+    <mat-card class="filtro">
+      <mat-form-field appearance="outline">
+        <mat-label>Período</mat-label>
+        <mat-date-range-input [rangePicker]="picker" [formGroup]="periodoForm">
+          <input matStartDate formControlName="start" placeholder="Início" (dateChange)="aoMudarPeriodo()" />
+          <input matEndDate formControlName="end" placeholder="Fim" (dateChange)="aoMudarPeriodo()" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
     </mat-card>
 
-    <mat-card class="kpi kpi-sucesso">
-      <mat-icon class="kpi-icone">verified</mat-icon>
-      <div class="kpi-corpo">
-        <span class="kpi-valor">
-          {{ s.percentualAproveitamento100 !== null ? (s.percentualAproveitamento100 | number: '1.0-0') + '%' : '—' }}
-        </span>
-        <span class="kpi-label">Sistemas com aproveitamento 100%</span>
-      </div>
-    </mat-card>
-
-    <mat-card class="kpi kpi-alerta">
-      <mat-icon class="kpi-icone">inventory_2</mat-icon>
-      <div class="kpi-corpo">
-        <span class="kpi-valor">{{ s.sobrasPendentes }}</span>
-        <span class="kpi-label">Sobras pendentes de retorno</span>
-      </div>
-    </mat-card>
-
-    <mat-card class="kpi kpi-alto">
-      <mat-icon class="kpi-icone">warning</mat-icon>
-      <div class="kpi-corpo">
-        <span class="kpi-valor">{{ s.alertasAltoPeriodo }}</span>
-        <span class="kpi-label">Alertas de alto risco no período</span>
-      </div>
-    </mat-card>
+    <button
+      mat-stroked-button
+      color="primary"
+      class="botao-exportar"
+      [disabled]="exportandoPdf"
+      (click)="exportarPdf()"
+    >
+      <mat-icon>picture_as_pdf</mat-icon>
+      {{ exportandoPdf ? 'Gerando PDF...' : 'Exportar PDF' }}
+    </button>
   </div>
 
-  <mat-card class="filtro">
-    <mat-form-field appearance="outline">
-      <mat-label>Período</mat-label>
-      <mat-date-range-input [rangePicker]="picker" [formGroup]="periodoForm">
-        <input matStartDate formControlName="start" placeholder="Início" (dateChange)="aoMudarPeriodo()" />
-        <input matEndDate formControlName="end" placeholder="Fim" (dateChange)="aoMudarPeriodo()" />
-      </mat-date-range-input>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
-  </mat-card>
-
-  <div class="graficos">
-    <mat-card class="grafico">
-      <h3>Top 10 equipes por pontos de alerta</h3>
-      <ngx-charts-bar-horizontal
-        [results]="topEquipes"
-        [xAxis]="true"
-        [yAxis]="true"
-        [showXAxisLabel]="false"
-        [showYAxisLabel]="false"
+  <div #areaExportavel class="area-exportavel">
+    <div class="cabecalho-relatorio">
+      <h2>Conectsol — Relatório de Sobras e Alertas</h2>
+      <span
+        >Período: {{ periodoForm.controls.start.value | date: 'dd/MM/yyyy' }} a
+        {{ periodoForm.controls.end.value | date: 'dd/MM/yyyy' }}</span
       >
-      </ngx-charts-bar-horizontal>
-    </mat-card>
+    </div>
 
-    <mat-card class="grafico">
-      <h3>Tendência dos últimos 6 meses</h3>
-      <ngx-charts-line-chart
-        [results]="tendencia"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="true"
-        [autoScale]="true"
-      >
-      </ngx-charts-line-chart>
-    </mat-card>
+    <div class="kpis" *ngIf="stats as s">
+      <mat-card class="kpi">
+        <mat-icon class="kpi-icone">bolt</mat-icon>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">{{ s.sistemasPeriodo }}</span>
+          <span class="kpi-label">Sistemas lançados no período</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="kpi kpi-sucesso">
+        <mat-icon class="kpi-icone">verified</mat-icon>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">
+            {{
+              s.percentualAproveitamento100 !== null ? (s.percentualAproveitamento100 | number: '1.0-0') + '%' : '—'
+            }}
+          </span>
+          <span class="kpi-label">Sistemas com aproveitamento 100%</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="kpi kpi-alerta">
+        <mat-icon class="kpi-icone">inventory_2</mat-icon>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">{{ s.sobrasPendentes }}</span>
+          <span class="kpi-label">Sobras pendentes de retorno</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="kpi kpi-alto">
+        <mat-icon class="kpi-icone">warning</mat-icon>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">{{ s.alertasAltoPeriodo }}</span>
+          <span class="kpi-label">Alertas de alto risco no período</span>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="graficos">
+      <mat-card class="grafico">
+        <h3>Top 10 equipes por pontos de alerta</h3>
+        <div class="ranking-equipes">
+          <div class="linha-ranking" *ngFor="let equipe of topEquipes">
+            <div class="trilha-barra">
+              <div class="barra-ranking" [style.width.%]="larguraBarra(equipe.value)"></div>
+              <span class="nome-equipe">{{ equipe.name }}</span>
+            </div>
+            <span class="pontos-equipe">{{ equipe.value }}</span>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="grafico">
+        <h3>Tendência dos últimos 6 meses</h3>
+        <ngx-charts-line-chart
+          [results]="tendencia"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="true"
+          [autoScale]="true"
+        >
+        </ngx-charts-line-chart>
+      </mat-card>
+    </div>
   </div>
 </div>

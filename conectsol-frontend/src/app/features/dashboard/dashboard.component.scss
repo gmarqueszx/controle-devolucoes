@@ -4,6 +4,39 @@
   gap: 16px;
 }
 
+.barra-acoes {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.botao-exportar {
+  height: 56px;
+}
+
+.area-exportavel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cabecalho-relatorio {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 4px 0;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+  }
+
+  span {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9rem;
+  }
+}
+
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -81,4 +114,57 @@
 
 .grafico {
   padding: 16px;
+}
+
+.ranking-equipes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.linha-ranking {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trilha-barra {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+}
+
+.barra-ranking {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: #3f51b5;
+}
+
+.nome-equipe {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 0.85),
+    0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.pontos-equipe {
+  flex-shrink: 0;
+  min-width: 24px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
