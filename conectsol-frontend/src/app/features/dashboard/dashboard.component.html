@@ -24,7 +24,7 @@
     </button>
   </div>
 
-  <div #areaExportavel class="area-exportavel">
+  <div class="area-exportavel">
     <div class="cabecalho-relatorio">
       <h2>Conectsol — Relatório de Sobras e Alertas</h2>
       <span
@@ -33,7 +33,7 @@
       >
     </div>
 
-    <div class="kpis" *ngIf="stats as s">
+    <div #blocoKpis class="kpis" *ngIf="stats as s">
       <mat-card class="kpi">
         <mat-icon class="kpi-icone">bolt</mat-icon>
         <div class="kpi-corpo">
@@ -74,7 +74,7 @@
     <div class="graficos">
       <mat-card class="grafico">
         <h3>Top 10 equipes por pontos de alerta</h3>
-        <div class="ranking-equipes">
+        <div #blocoRanking class="ranking-equipes">
           <div class="linha-ranking" *ngFor="let equipe of topEquipes">
             <div class="trilha-barra">
               <div class="barra-ranking" [style.width.%]="larguraBarra(equipe.value)"></div>
@@ -88,6 +88,7 @@
       <mat-card class="grafico">
         <h3>Tendência dos últimos 6 meses</h3>
         <ngx-charts-line-chart
+          #graficoTendencia
           [results]="tendencia"
           [xAxis]="true"
           [yAxis]="true"
