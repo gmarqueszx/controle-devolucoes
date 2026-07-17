@@ -10,6 +10,7 @@ import br.com.conectsol.backend.model.EquipeMembro;
 import br.com.conectsol.backend.model.FuncaoEquipe;
 import br.com.conectsol.backend.model.Lancamento;
 import br.com.conectsol.backend.model.NivelAlerta;
+import br.com.conectsol.backend.model.StatusAlerta;
 import br.com.conectsol.backend.repository.AlertaRepository;
 import br.com.conectsol.backend.repository.EquipeRepository;
 import br.com.conectsol.backend.repository.LancamentoRepository;
@@ -66,6 +67,42 @@ class RelatorioServiceTest {
         assertThat(relatorio.getPontos()).isEqualTo(2 * 5 + 1 * 3 + 1 * 1);
         assertThat(relatorio.getSistemas()).isEqualTo(12);
         assertThat(relatorio.getIndiceAlertasPorSistema()).isEqualTo(4.0 / 12.0);
+    }
+
+    @Test
+    void naoDeveContarAlertasJustificadosOuResolvidosNosPontos() {
+        Equipe jose = equipeComMembros(1L, "JOSE", "CARLOS");
+
+        List<Alerta> alertas = List.of(
+                Alerta.builder()
+                        .equipe(jose)
+                        .nivel(NivelAlerta.ALTO)
+                        .status(StatusAlerta.ABERTO)
+                        .dataAlerta(LocalDate.now())
+                        .build(),
+                Alerta.builder()
+                        .equipe(jose)
+                        .nivel(NivelAlerta.ALTO)
+                        .status(StatusAlerta.JUSTIFICADO)
+                        .dataAlerta(LocalDate.now())
+                        .build(),
+                Alerta.builder()
+                        .equipe(jose)
+                        .nivel(NivelAlerta.MEDIO)
+                        .status(StatusAlerta.RESOLVIDO)
+                        .dataAlerta(LocalDate.now())
+                        .build());
+
+        when(equipeRepository.findAllById(any())).thenReturn(List.of(jose));
+
+        var resultado = relatorioService.montarRelatorioEquipes(alertas, List.of());
+
+        assertThat(resultado).hasSize(1);
+        var relatorio = resultado.get(0);
+        assertThat(relatorio.getAlto()).isEqualTo(1);
+        assertThat(relatorio.getMedio()).isZero();
+        assertThat(relatorio.getTotalAlertas()).isEqualTo(1);
+        assertThat(relatorio.getPontos()).isEqualTo(5);
     }
 
     @Test

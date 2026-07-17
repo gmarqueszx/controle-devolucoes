@@ -6,6 +6,7 @@ import br.com.conectsol.backend.model.Alerta;
 import br.com.conectsol.backend.model.Equipe;
 import br.com.conectsol.backend.model.Lancamento;
 import br.com.conectsol.backend.model.NivelAlerta;
+import br.com.conectsol.backend.model.StatusAlerta;
 import br.com.conectsol.backend.repository.AlertaRepository;
 import br.com.conectsol.backend.repository.EquipeRepository;
 import br.com.conectsol.backend.repository.LancamentoRepository;
@@ -44,7 +45,10 @@ public class RelatorioService {
     }
 
     List<RelatorioEquipeDTO> montarRelatorioEquipes(List<Alerta> alertas, List<Lancamento> lancamentos) {
+        // Alertas justificados ou resolvidos ja foram tratados pela equipe e nao devem continuar pesando na
+        // pontuacao/contadores do relatorio; so os ABERTO contam contra a equipe.
         Map<Long, List<Alerta>> alertasPorEquipe = alertas.stream()
+                .filter(a -> a.getStatus() == StatusAlerta.ABERTO)
                 .collect(Collectors.groupingBy(a -> a.getEquipe().getId()));
         Map<Long, List<Lancamento>> lancamentosPorEquipe = lancamentos.stream()
                 .collect(Collectors.groupingBy(l -> l.getEquipe().getId()));
