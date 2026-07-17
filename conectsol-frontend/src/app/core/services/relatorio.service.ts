@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DashboardStats, RelatorioEquipe, TendenciaMensal } from '../models/relatorio.model';
+import { DashboardStats, RelatorioColaborador, RelatorioEquipe, TendenciaMensal } from '../models/relatorio.model';
 
 @Injectable({ providedIn: 'root' })
 export class RelatorioService {
@@ -14,6 +14,11 @@ export class RelatorioService {
   relatorioEquipes(de: string, ate: string): Observable<RelatorioEquipe[]> {
     const params = new HttpParams().set('de', de).set('ate', ate);
     return this.http.get<RelatorioEquipe[]>(`${this.apiUrl}/equipes`, { params });
+  }
+
+  relatorioColaboradores(de: string, ate: string): Observable<RelatorioColaborador[]> {
+    const params = new HttpParams().set('de', de).set('ate', ate);
+    return this.http.get<RelatorioColaborador[]>(`${this.apiUrl}/colaboradores`, { params });
   }
 
   tendencia(meses = 6): Observable<TendenciaMensal[]> {

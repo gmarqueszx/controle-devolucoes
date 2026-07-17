@@ -8,7 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { RelatorioEquipe } from '../../core/models/relatorio.model';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RelatorioColaborador, RelatorioEquipe } from '../../core/models/relatorio.model';
 import { RelatorioService } from '../../core/services/relatorio.service';
 
 @Component({
@@ -23,7 +24,8 @@ import { RelatorioService } from '../../core/services/relatorio.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatTabsModule
   ],
   templateUrl: './relatorio-equipes.component.html',
   styleUrl: './relatorio-equipes.component.scss'
@@ -40,7 +42,9 @@ export class RelatorioEquipesComponent implements AfterViewInit {
     'sistemas',
     'indice'
   ];
+  displayedColumnsColaboradores = ['nome', 'alto', 'medio', 'leve', 'totalAlertas', 'pontos'];
   dataSource = new MatTableDataSource<RelatorioEquipe>([]);
+  colaboradores: RelatorioColaborador[] = [];
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -63,7 +67,7 @@ export class RelatorioEquipesComponent implements AfterViewInit {
     this.carregarRelatorio();
   }
 
-  classeLinha(item: RelatorioEquipe): string {
+  classeLinha(item: { alto: number; medio: number }): string {
     if (item.alto > 0) {
       return 'linha-alto';
     }
@@ -83,6 +87,12 @@ export class RelatorioEquipesComponent implements AfterViewInit {
     this.relatorioService
       .relatorioEquipes(this.paraIso(inicio), this.paraIso(fim))
       .subscribe((relatorio) => (this.dataSource.data = relatorio));
+
+    this.relatorioService
+      .relatorioColaboradores(this.paraIso(inicio), this.paraIso(fim))
+      .subscribe((colaboradores) => {
+        this.colaboradores = colaboradores.slice().sort((a, b) => b.pontos - a.pontos);
+      });
   }
 
   private inicioPeriodoPadrao(): Date {

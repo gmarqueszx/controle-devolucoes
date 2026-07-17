@@ -11,6 +11,15 @@ export interface RelatorioEquipe {
   indiceAlertasPorSistema: number;
 }
 
+export interface RelatorioColaborador {
+  nome: string;
+  alto: number;
+  medio: number;
+  leve: number;
+  totalAlertas: number;
+  pontos: number;
+}
+
 export interface TendenciaMensal {
   mes: string; // "Jan/26"
   alto: number;

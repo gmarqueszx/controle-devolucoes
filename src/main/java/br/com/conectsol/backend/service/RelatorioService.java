@@ -1,9 +1,11 @@
 package br.com.conectsol.backend.service;
 
+import br.com.conectsol.backend.dto.RelatorioColaboradorDTO;
 import br.com.conectsol.backend.dto.RelatorioEquipeDTO;
 import br.com.conectsol.backend.dto.TendenciaMensalDTO;
 import br.com.conectsol.backend.model.Alerta;
 import br.com.conectsol.backend.model.Equipe;
+import br.com.conectsol.backend.model.EquipeMembro;
 import br.com.conectsol.backend.model.Lancamento;
 import br.com.conectsol.backend.model.NivelAlerta;
 import br.com.conectsol.backend.model.StatusAlerta;
@@ -13,6 +15,7 @@ import br.com.conectsol.backend.repository.LancamentoRepository;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +90,51 @@ public class RelatorioService {
                     .pontos(pontos)
                     .sistemas(sistemas)
                     .indiceAlertasPorSistema(indice)
+                    .build());
+        }
+        return resultado;
+    }
+
+    /**
+     * Mesma pontuacao por alerta (alto/medio/leve, so ABERTO) do relatorio de equipes, mas atribuida a cada
+     * colaborador individualmente: um alerta de uma equipe de 2-3 pessoas soma pontos para cada uma delas, ja
+     * que a equipe toda responde pelo lancamento. Colaboradores que trocam de parceiro ao longo do tempo (e por
+     * isso aparecem em varias equipes diferentes) tem os pontos de todas elas somados sob o mesmo nome.
+     */
+    @Transactional(readOnly = true)
+    public List<RelatorioColaboradorDTO> gerarRelatorioColaboradores(LocalDate de, LocalDate ate) {
+        List<Alerta> alertas = alertaRepository.findByDataAlertaBetween(de, ate);
+        return montarRelatorioColaboradores(alertas);
+    }
+
+    List<RelatorioColaboradorDTO> montarRelatorioColaboradores(List<Alerta> alertas) {
+        Map<String, List<Alerta>> alertasPorColaborador = new LinkedHashMap<>();
+        for (Alerta alerta : alertas) {
+            if (alerta.getStatus() != StatusAlerta.ABERTO || alerta.getEquipe() == null) {
+                continue;
+            }
+            for (EquipeMembro membro : alerta.getEquipe().getMembros()) {
+                if (membro.getNome() == null || membro.getNome().isBlank()) {
+                    continue;
+                }
+                alertasPorColaborador.computeIfAbsent(membro.getNome(), nome -> new ArrayList<>()).add(alerta);
+            }
+        }
+
+        List<RelatorioColaboradorDTO> resultado = new ArrayList<>();
+        for (Map.Entry<String, List<Alerta>> entry : alertasPorColaborador.entrySet()) {
+            List<Alerta> alertasColaborador = entry.getValue();
+            long alto = contarPorNivel(alertasColaborador, NivelAlerta.ALTO);
+            long medio = contarPorNivel(alertasColaborador, NivelAlerta.MEDIO);
+            long leve = contarPorNivel(alertasColaborador, NivelAlerta.LEVE);
+
+            resultado.add(RelatorioColaboradorDTO.builder()
+                    .nome(entry.getKey())
+                    .alto(alto)
+                    .medio(medio)
+                    .leve(leve)
+                    .totalAlertas((long) alertasColaborador.size())
+                    .pontos(alto * PONTOS_ALTO + medio * PONTOS_MEDIO + leve * PONTOS_LEVE)
                     .build());
         }
         return resultado;

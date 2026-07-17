@@ -1,5 +1,6 @@
 package br.com.conectsol.backend.controller;
 
+import br.com.conectsol.backend.dto.RelatorioColaboradorDTO;
 import br.com.conectsol.backend.dto.RelatorioEquipeDTO;
 import br.com.conectsol.backend.dto.TendenciaMensalDTO;
 import br.com.conectsol.backend.service.RelatorioService;
@@ -24,6 +25,13 @@ public class RelatorioController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate de,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ate) {
         return relatorioService.gerarRelatorioEquipes(de, ate);
+    }
+
+    @GetMapping("/colaboradores")
+    public List<RelatorioColaboradorDTO> relatorioColaboradores(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate de,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ate) {
+        return relatorioService.gerarRelatorioColaboradores(de, ate);
     }
 
     @GetMapping("/tendencia")

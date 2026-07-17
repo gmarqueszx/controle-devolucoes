@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import br.com.conectsol.backend.dto.RelatorioColaboradorDTO;
 import br.com.conectsol.backend.model.Alerta;
 import br.com.conectsol.backend.model.Equipe;
 import br.com.conectsol.backend.model.EquipeMembro;
@@ -17,6 +18,7 @@ import br.com.conectsol.backend.repository.LancamentoRepository;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -118,6 +120,42 @@ class RelatorioServiceTest {
         assertThat(resultado).hasSize(1);
         assertThat(resultado.get(0).getSistemas()).isZero();
         assertThat(resultado.get(0).getIndiceAlertasPorSistema()).isZero();
+    }
+
+    @Test
+    void deveSomarPontosParaCadaMembroDaEquipeIndividualmente() {
+        Equipe joseCarlos = equipeComMembros(1L, "JOSE", "CARLOS");
+        Equipe joseMaria = equipeComMembros(2L, "JOSE", "MARIA");
+
+        List<Alerta> alertas = List.of(
+                Alerta.builder()
+                        .equipe(joseCarlos)
+                        .nivel(NivelAlerta.ALTO)
+                        .status(StatusAlerta.ABERTO)
+                        .dataAlerta(LocalDate.now())
+                        .build(),
+                Alerta.builder()
+                        .equipe(joseMaria)
+                        .nivel(NivelAlerta.MEDIO)
+                        .status(StatusAlerta.ABERTO)
+                        .dataAlerta(LocalDate.now())
+                        .build(),
+                Alerta.builder()
+                        .equipe(joseCarlos)
+                        .nivel(NivelAlerta.LEVE)
+                        .status(StatusAlerta.JUSTIFICADO)
+                        .dataAlerta(LocalDate.now())
+                        .build());
+
+        var resultado = relatorioService.montarRelatorioColaboradores(alertas);
+        var porNome = resultado.stream().collect(Collectors.toMap(RelatorioColaboradorDTO::getNome, r -> r));
+
+        // Jose participou das duas equipes: soma o alto da equipe 1 com o medio da equipe 2.
+        assertThat(porNome.get("JOSE").getPontos()).isEqualTo(5 + 3);
+        // Carlos so estava na equipe 1; o alerta leve dela e JUSTIFICADO e nao conta.
+        assertThat(porNome.get("CARLOS").getPontos()).isEqualTo(5);
+        assertThat(porNome.get("CARLOS").getTotalAlertas()).isEqualTo(1);
+        assertThat(porNome.get("MARIA").getPontos()).isEqualTo(3);
     }
 
     @Test
