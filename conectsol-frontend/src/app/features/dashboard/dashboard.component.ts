@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit {
     }
     this.exportandoPdf = true;
     try {
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
       const margem = 10;
       const alturaPagina = pdf.internal.pageSize.getHeight();
       const larguraUtil = pdf.internal.pageSize.getWidth() - margem * 2;
@@ -110,24 +110,31 @@ export class DashboardComponent implements OnInit {
         cursorY += 6;
       }
 
+      // Ranking e tendencia lado a lado, igual ao layout de 2 colunas do dashboard na tela.
+      const espacoEntreColunas = 8;
+      const larguraColuna = (larguraUtil - espacoEntreColunas) / 2;
+      const xColunaEsquerda = margem;
+      const xColunaDireita = margem + larguraColuna + espacoEntreColunas;
+      const yInicioLinha = cursorY;
+
       if (this.blocoRanking) {
         pdf.setFontSize(12);
-        pdf.text('Top 10 equipes por pontos de alerta', margem, cursorY);
-        cursorY += 6;
-        cursorY = await this.adicionarBlocoHtml(pdf, this.blocoRanking.nativeElement, margem, cursorY, larguraUtil, alturaPagina);
-        cursorY += 6;
+        pdf.text('Top 10 equipes por pontos de alerta', xColunaEsquerda, yInicioLinha);
+        await this.adicionarBlocoHtml(
+          pdf,
+          this.blocoRanking.nativeElement,
+          xColunaEsquerda,
+          yInicioLinha + 6,
+          larguraColuna,
+          alturaPagina
+        );
       }
 
       const svgTendencia = this.graficoTendencia?.nativeElement.querySelector('svg');
       if (svgTendencia) {
-        if (cursorY + 10 > alturaPagina - margem) {
-          pdf.addPage();
-          cursorY = margem;
-        }
         pdf.setFontSize(12);
-        pdf.text('Tendência dos últimos 6 meses', margem, cursorY);
-        cursorY += 6;
-        cursorY = await this.adicionarSvgComoImagem(pdf, svgTendencia, margem, cursorY, larguraUtil, alturaPagina);
+        pdf.text('Tendência dos últimos 6 meses', xColunaDireita, yInicioLinha);
+        await this.adicionarSvgComoImagem(pdf, svgTendencia, xColunaDireita, yInicioLinha + 6, larguraColuna, alturaPagina);
       }
 
       const data = new Date().toISOString().substring(0, 10);
