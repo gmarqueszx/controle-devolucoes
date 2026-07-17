@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -31,7 +32,13 @@ public class Equipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * BatchSize evita N+1 quando várias equipes são carregadas de uma vez (listagens de lançamento/alerta/equipe)
+     * e cada uma tem seus membros lazy acessados via getMontador()/getEletricista()/getAjudante(): em vez de uma
+     * query por equipe, o Hibernate busca os membros de até 50 equipes em uma única query "IN".
+     */
     @OneToMany(mappedBy = "equipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @BatchSize(size = 50)
     @Builder.Default
     private List<EquipeMembro> membros = new ArrayList<>();
 
