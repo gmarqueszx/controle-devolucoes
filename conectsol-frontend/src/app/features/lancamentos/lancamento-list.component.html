@@ -26,48 +26,62 @@
           <mat-option *ngFor="let equipe of equipes" [value]="equipe.id">{{ equipe | equipeNome }}</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar</mat-label>
+        <input matInput formControlName="busca" placeholder="Cliente, montador, eletricista..." />
+        <mat-icon matIconSuffix>search</mat-icon>
+      </mat-form-field>
     </form>
   </mat-card>
 
   <mat-card class="tabela-container">
-    <table mat-table [dataSource]="lancamentos" class="tabela">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      matSortActive="dataLancamento"
+      matSortDirection="desc"
+      matSortDisableClear
+      class="tabela"
+    >
       <ng-container matColumnDef="dataLancamento">
-        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
         <td mat-cell *matCellDef="let item">{{ item.dataLancamento | date: 'dd/MM/yyyy' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="montador">
-        <th mat-header-cell *matHeaderCellDef>Montador</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Montador</th>
         <td mat-cell *matCellDef="let item">{{ item.montador }}</td>
       </ng-container>
 
       <ng-container matColumnDef="eletricista">
-        <th mat-header-cell *matHeaderCellDef>Eletricista</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Eletricista</th>
         <td mat-cell *matCellDef="let item">{{ item.eletricista }}</td>
       </ng-container>
 
       <ng-container matColumnDef="cliente">
-        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
         <td mat-cell *matCellDef="let item">{{ item.cliente }}</td>
       </ng-container>
 
       <ng-container matColumnDef="sistemas">
-        <th mat-header-cell *matHeaderCellDef>Sistemas</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sistemas</th>
         <td mat-cell *matCellDef="let item">{{ item.sistemas }}</td>
       </ng-container>
 
       <ng-container matColumnDef="solo">
-        <th mat-header-cell *matHeaderCellDef>Solo</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Solo</th>
         <td mat-cell *matCellDef="let item">{{ item.solo ? 'Sim' : 'Não' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="strings">
-        <th mat-header-cell *matHeaderCellDef>Strings</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Strings</th>
         <td mat-cell *matCellDef="let item">{{ item.strings }}</td>
       </ng-container>
 
       <ng-container matColumnDef="aproveitamento">
-        <th mat-header-cell *matHeaderCellDef>Aproveitamento</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Aproveitamento</th>
         <td mat-cell *matCellDef="let item">
           {{ item.aproveitamento != null ? (item.aproveitamento | percent: '1.0-1') : '-' }}
         </td>
@@ -90,6 +104,10 @@
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="sem-resultados" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">Nenhum lançamento encontrado para os filtros aplicados.</td>
+      </tr>
     </table>
   </mat-card>
 </div>
