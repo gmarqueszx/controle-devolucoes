@@ -10,6 +10,16 @@
   justify-content: space-between;
 }
 
+.filtros {
+  padding: 12px 16px;
+}
+
+.filtros-form {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .tabela-container {
   overflow-x: auto;
   padding: 0;
@@ -19,8 +29,8 @@
   width: 100%;
 }
 
-.vazio {
-  padding: 24px;
+.sem-resultados td {
+  padding: 16px;
   text-align: center;
   color: rgba(0, 0, 0, 0.6);
 }
