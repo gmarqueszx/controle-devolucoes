@@ -49,5 +49,6 @@ public class LancamentoDTO {
     private Double ajusteFinoPreto;
     private Double ajusteFinoHepr;
     private String localizacaoSobra;
+    private String cidadeSobra;
     private Long diasParado;
 }

@@ -120,6 +120,9 @@ public class Lancamento {
     @Column(name = "localizacao_sobra", length = 200)
     private String localizacaoSobra;
 
+    @Column(name = "cidade_sobra", length = 100)
+    private String cidadeSobra;
+
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime criadoEm;

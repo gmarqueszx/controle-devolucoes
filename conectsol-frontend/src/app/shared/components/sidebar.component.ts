@@ -43,6 +43,7 @@ export class SidebarComponent {
     { label: 'Lançamentos', path: '/lancamentos', icon: 'assignment' },
     { label: 'Alertas', path: '/alertas', icon: 'warning' },
     { label: 'Sobras pendentes', path: '/sobras', icon: 'inventory_2' },
+    { label: 'Localização Sobras', path: '/localizacao-sobras', icon: 'map' },
     { label: 'Equipes', path: '/equipes', icon: 'groups' }
   ];
 }

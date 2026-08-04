@@ -183,6 +183,7 @@ public class LancamentoService {
         lancamento.setAjusteFinoPreto(request.getAjusteFinoPreto());
         lancamento.setAjusteFinoHepr(request.getAjusteFinoHepr());
         lancamento.setLocalizacaoSobra(request.getLocalizacaoSobra());
+        lancamento.setCidadeSobra(request.getCidadeSobra());
 
         lancamento.getInversores().clear();
         List<LancamentoInversor> inversoresEntidade = inversoresRequest.stream()
@@ -252,6 +253,7 @@ public class LancamentoService {
                 .ajusteFinoPreto(lancamento.getAjusteFinoPreto())
                 .ajusteFinoHepr(lancamento.getAjusteFinoHepr())
                 .localizacaoSobra(lancamento.getLocalizacaoSobra())
+                .cidadeSobra(lancamento.getCidadeSobra())
                 .diasParado(calcularDiasParado(lancamento))
                 .build();
     }

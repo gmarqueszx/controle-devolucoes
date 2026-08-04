@@ -37,7 +37,7 @@ import { EquipeNomePipe } from '../../shared/pipes/equipe-nome.pipe';
   styleUrl: './sobras-pendentes.component.scss'
 })
 export class SobrasPendentesComponent implements OnInit, AfterViewInit {
-  displayedColumns = ['cliente', 'montador', 'dataLancamento', 'diasParado', 'localizacaoSobra', 'acoes'];
+  displayedColumns = ['cliente', 'montador', 'cidadeSobra', 'dataLancamento', 'diasParado', 'localizacaoSobra', 'acoes'];
   dataSource = new MatTableDataSource<Lancamento>([]);
   equipes: Equipe[] = [];
 
@@ -80,9 +80,9 @@ export class SobrasPendentesComponent implements OnInit, AfterViewInit {
       const combinaEquipe = !equipeId || item.equipeId === equipeId;
       const combinaBusca =
         !buscaNormalizada ||
-        this.normalizar(`${item.cliente ?? ''} ${item.montador ?? ''} ${item.localizacaoSobra ?? ''}`).includes(
-          buscaNormalizada
-        );
+        this.normalizar(
+          `${item.cliente ?? ''} ${item.montador ?? ''} ${item.cidadeSobra ?? ''} ${item.localizacaoSobra ?? ''}`
+        ).includes(buscaNormalizada);
       return combinaEquipe && combinaBusca;
     });
   }

@@ -49,6 +49,7 @@ export interface Lancamento {
   ajusteFinoPreto: number | null;
   ajusteFinoHepr: number | null;
   localizacaoSobra: string | null;
+  cidadeSobra: string | null;
   diasParado: number | null;
 }
 
@@ -79,4 +80,5 @@ export interface LancamentoRequest {
   ajusteFinoPreto?: number;
   ajusteFinoHepr?: number;
   localizacaoSobra?: string;
+  cidadeSobra?: string;
 }

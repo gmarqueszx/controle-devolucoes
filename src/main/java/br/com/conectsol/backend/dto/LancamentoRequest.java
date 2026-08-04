@@ -57,4 +57,5 @@ public class LancamentoRequest {
     private Double ajusteFinoHepr;
 
     private String localizacaoSobra;
+    private String cidadeSobra;
 }

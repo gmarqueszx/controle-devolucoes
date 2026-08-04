@@ -191,6 +191,20 @@
       <h3>Controle de sobra</h3>
       <div class="linha">
         <mat-form-field appearance="outline" class="campo">
+          <mat-label>Cidade da sobra (BA)</mat-label>
+          <input
+            matInput
+            formControlName="cidadeSobra"
+            [matAutocomplete]="autoCidade"
+            placeholder="Ex: Tanhaçu"
+          />
+          <mat-autocomplete #autoCidade="matAutocomplete">
+            <mat-option *ngFor="let cidade of cidadesOpcoes$ | async" [value]="cidade">{{ cidade }}</mat-option>
+          </mat-autocomplete>
+          <mat-hint>Usada na aba "Localização Sobras" para o gerente de rotas localizar sobras pendentes</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="campo">
           <mat-label>Localização da sobra</mat-label>
           <input matInput formControlName="localizacaoSobra" placeholder="Ex: Galpão A, com a equipe X" />
         </mat-form-field>

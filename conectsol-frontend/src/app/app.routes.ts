@@ -8,6 +8,7 @@ import { LancamentoFormComponent } from './features/lancamentos/lancamento-form.
 import { AlertaListComponent } from './features/alertas/alerta-list.component';
 import { EquipeListComponent } from './features/equipes/equipe-list.component';
 import { SobrasPendentesComponent } from './features/sobras/sobras-pendentes.component';
+import { LocalizacaoSobrasComponent } from './features/localizacao/localizacao-sobras.component';
 import { LayoutComponent } from './shared/components/layout.component';
 
 export const routes: Routes = [
@@ -25,7 +26,8 @@ export const routes: Routes = [
       { path: 'lancamentos/:id/editar', component: LancamentoFormComponent, canActivate: [adminGuard] },
       { path: 'alertas', component: AlertaListComponent },
       { path: 'equipes', component: EquipeListComponent },
-      { path: 'sobras', component: SobrasPendentesComponent }
+      { path: 'sobras', component: SobrasPendentesComponent },
+      { path: 'localizacao-sobras', component: LocalizacaoSobrasComponent }
     ]
   },
   { path: '**', redirectTo: 'dashboard' }

@@ -1,21 +1,50 @@
-<div class="sobras">
+<div class="localizacao">
   <div class="cabecalho">
-    <h2>Sobras pendentes</h2>
+    <h2>Localização Sobras</h2>
+  </div>
+
+  <p class="dica">
+    Cada bolinha no mapa mostra quantas sobras pendentes existem naquela cidade. Clique numa cidade — no mapa ou na
+    lista abaixo — para filtrar a tabela de clientes.
+  </p>
+
+  <div class="conteudo">
+    <mat-card class="mapa-container">
+      <div #mapa class="mapa"></div>
+    </mat-card>
+
+    <mat-card class="resumo-container">
+      <h3>Sobras por cidade</h3>
+      <div class="lista-cidades" *ngIf="cidadesResumo.length; else semDados">
+        <button
+          type="button"
+          class="item-cidade"
+          *ngFor="let item of cidadesResumo"
+          [class.selecionado]="cidadeSelecionada === item.cidade"
+          (click)="selecionarCidade(item.cidade)"
+        >
+          <span class="nome">{{ item.cidade }}</span>
+          <span class="badge">{{ item.quantidade }}</span>
+        </button>
+      </div>
+      <ng-template #semDados>
+        <p class="vazio">Nenhuma sobra pendente com cidade informada.</p>
+      </ng-template>
+      <p class="sem-cidade" *ngIf="semCidade > 0">
+        {{ semCidade }} sobra(s) pendente(s) sem cidade informada.
+      </p>
+      <button mat-stroked-button *ngIf="cidadeSelecionada" (click)="limparSelecao()">
+        <mat-icon>close</mat-icon>
+        Limpar filtro ({{ cidadeSelecionada }})
+      </button>
+    </mat-card>
   </div>
 
   <mat-card class="filtros">
     <form [formGroup]="filtroForm" class="filtros-form">
       <mat-form-field appearance="outline">
-        <mat-label>Equipe</mat-label>
-        <mat-select formControlName="equipeId">
-          <mat-option [value]="null">Todas</mat-option>
-          <mat-option *ngFor="let equipe of equipes" [value]="equipe.id">{{ equipe | equipeNome }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
         <mat-label>Buscar</mat-label>
-        <input matInput formControlName="busca" placeholder="Cliente, equipe, cidade, localização..." />
+        <input matInput formControlName="busca" placeholder="Cliente, cidade..." />
         <mat-icon matIconSuffix>search</mat-icon>
       </mat-form-field>
     </form>
@@ -36,29 +65,14 @@
         <td mat-cell *matCellDef="let item">{{ item.cliente }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="montador">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Equipe</th>
-        <td mat-cell *matCellDef="let item">{{ item.montador }}</td>
-      </ng-container>
-
       <ng-container matColumnDef="cidadeSobra">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Cidade</th>
         <td mat-cell *matCellDef="let item">{{ item.cidadeSobra || '-' }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="dataLancamento">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Data do lançamento</th>
-        <td mat-cell *matCellDef="let item">{{ item.dataLancamento | date: 'dd/MM/yyyy' }}</td>
-      </ng-container>
-
       <ng-container matColumnDef="diasParado">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Dias parado</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Dias parados</th>
         <td mat-cell *matCellDef="let item">{{ item.diasParado ?? '-' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="localizacaoSobra">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Localização</th>
-        <td mat-cell *matCellDef="let item">{{ item.localizacaoSobra || '-' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="acoes">

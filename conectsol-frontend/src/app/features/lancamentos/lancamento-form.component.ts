@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
+import { CIDADES_BAHIA } from '../../core/data/cidades-bahia';
 import { Equipe } from '../../core/models/equipe.model';
 import { AuthService } from '../../core/services/auth.service';
 import { EquipeService } from '../../core/services/equipe.service';
@@ -56,7 +57,10 @@ export class LancamentoFormComponent implements OnInit {
   montadoresOpcoes$: Observable<OpcaoNome[]> = new Observable<OpcaoNome[]>();
   eletricistasOpcoes$: Observable<OpcaoNome[]> = new Observable<OpcaoNome[]>();
   ajudantesOpcoes$: Observable<OpcaoNome[]> = new Observable<OpcaoNome[]>();
+  cidadesOpcoes$: Observable<string[]> = new Observable<string[]>();
   lancamentoId: number | null = null;
+
+  private readonly nomesCidadesBahia = CIDADES_BAHIA.map((c) => c.nome);
 
   private conhecidos: Record<CampoNome, string[]> = { montador: [], eletricista: [], ajudante: [] };
   private confirmados: Record<CampoNome, string | null> = { montador: null, eletricista: null, ajudante: null };
@@ -91,7 +95,8 @@ export class LancamentoFormComponent implements OnInit {
     ajusteFinoVerm: [null as number | null],
     ajusteFinoPreto: [null as number | null],
     ajusteFinoHepr: [null as number | null],
-    localizacaoSobra: ['']
+    localizacaoSobra: [''],
+    cidadeSobra: ['']
   });
 
   constructor(
@@ -129,6 +134,10 @@ export class LancamentoFormComponent implements OnInit {
     this.ajudantesOpcoes$ = this.form.controls.ajudante.valueChanges.pipe(
       startWith(''),
       map((valor) => this.montarOpcoes('ajudante', valor))
+    );
+    this.cidadesOpcoes$ = this.form.controls.cidadeSobra.valueChanges.pipe(
+      startWith(''),
+      map((valor) => this.filtrarCidades(valor))
     );
 
     this.form.controls.tipoSistema.valueChanges.subscribe((tipoSistema) => this.aoMudarTipoSistema(tipoSistema));
@@ -187,7 +196,8 @@ export class LancamentoFormComponent implements OnInit {
       ajusteFinoVerm: valores.ajusteFinoVerm ?? undefined,
       ajusteFinoPreto: valores.ajusteFinoPreto ?? undefined,
       ajusteFinoHepr: valores.ajusteFinoHepr ?? undefined,
-      localizacaoSobra: valores.localizacaoSobra ?? undefined
+      localizacaoSobra: valores.localizacaoSobra ?? undefined,
+      cidadeSobra: valores.cidadeSobra?.trim() || undefined
     };
 
     const operacao = this.modoEdicao
@@ -240,7 +250,8 @@ export class LancamentoFormComponent implements OnInit {
         ajusteFinoVerm: lancamento.ajusteFinoVerm,
         ajusteFinoPreto: lancamento.ajusteFinoPreto,
         ajusteFinoHepr: lancamento.ajusteFinoHepr,
-        localizacaoSobra: lancamento.localizacaoSobra ?? ''
+        localizacaoSobra: lancamento.localizacaoSobra ?? '',
+        cidadeSobra: lancamento.cidadeSobra ?? ''
       });
 
       this.inversoresArray.controls.forEach((grupo, i) => {
@@ -296,6 +307,14 @@ export class LancamentoFormComponent implements OnInit {
       opcoes.push({ valor: texto, ehNovo: true });
     }
     return opcoes;
+  }
+
+  private filtrarCidades(valor: string | null): string[] {
+    const texto = (valor ?? '').trim().toLowerCase();
+    if (!texto) {
+      return this.nomesCidadesBahia;
+    }
+    return this.nomesCidadesBahia.filter((nome) => nome.toLowerCase().includes(texto));
   }
 
   private nomeConfirmadoValidator(campo: CampoNome) {
